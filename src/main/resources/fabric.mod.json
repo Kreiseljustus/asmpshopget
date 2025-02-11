@@ -1,0 +1,39 @@
+{
+	"schemaVersion": 1,
+	"id": "asmpshopget",
+	"version": "${version}",
+	"name": "ASMP ShopGet",
+	"description": "Sends data about shops to a website for listing",
+	"authors": [
+		"Kreiseljustus"
+	],
+	"contact": {
+		"homepage": "https://kreiseljustus.com/asmp",
+		"sources": "https://github.com/Kreiseljustus/asmpshopget"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/asmpshopget/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"io.github.kreiseljustus.Asmpshopget"
+		],
+		"modmenu": [
+			"io.github.kreiseljustus.ModMenu"
+		]
+	},
+	"mixins": [
+		"asmpshopget.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.10",
+		"minecraft": "~1.20.2",
+		"java": ">=17",
+		"fabric-api": "*",
+		"modmenu": "8.0.1",
+		"cloth-config": "12.0.137"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

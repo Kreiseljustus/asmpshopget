@@ -1,0 +1,8 @@
+{
+  "text.autoconfig.asmpshopget.option.enableDebugMode": "Enable Debug Mode",
+  "text.autoconfig.asmpshopget.option.postUrl": "Server URL",
+  "text.autoconfig.asmpshopget.option.ticksBetweenSends": "Ticks between sending updates",
+  "text.autoconfig.asmpshopget.option.createNewThreadPerSend": "Multithreaded (crash after multiple hours)",
+  "text.autoconfig.asmpshopget.title": "ASMP ShopGet (send help)",
+  "text.autoconfig.asmpshopget.option.enable": "Enable (please)"
+}
