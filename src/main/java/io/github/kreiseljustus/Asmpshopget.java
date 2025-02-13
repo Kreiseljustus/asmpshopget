@@ -101,7 +101,7 @@ public class Asmpshopget implements ModInitializer {
 	}
 
 	private void onEnterNewChunk(Player p, Level world, ChunkPos pos) {
-		p.displayClientMessage(Component.literal("new chunk entered"), false);
+		debug("new chunk entered");
 		Map<BlockPos, BlockEntity> blockEntities = world.getChunk(pos.x,pos.z).getBlockEntities();
 		for(Map.Entry<BlockPos, BlockEntity> value : blockEntities.entrySet()) {
 			BlockPos epos = value.getKey();
@@ -125,7 +125,7 @@ public class Asmpshopget implements ModInitializer {
 			String item = text.getMessage(2,false).getString();
 			String price = text.getMessage(3,false).getString();
 
-			p.displayClientMessage(Component.literal(owner + " is " + sellBuyOOS + " " + item + " for " + price),false);
+			debug(owner + " is " + sellBuyOOS + " " + item + " for " + price);
 
 			int[] position = {
 				epos.getX(), epos.getY(), epos.getZ()
