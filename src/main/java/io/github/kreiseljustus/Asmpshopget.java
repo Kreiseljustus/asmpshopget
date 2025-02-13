@@ -49,11 +49,14 @@ public class Asmpshopget implements ModInitializer {
 	static Player p = null;
 
 	List<ShopDataHolder> cachedData = new LinkedList<>();
+	List<Thread> threads = new LinkedList<>();
+
+	public static ServerData server = null;
 
 	public static boolean onASMP() {
 		Minecraft client = Minecraft.getInstance();
 
-        ServerData server = client.getCurrentServer();
+        server = client.getCurrentServer();
         if (server == null) return false;
         return server.ip.equals("aclu.r2f.co");
     }
@@ -68,14 +71,19 @@ public class Asmpshopget implements ModInitializer {
 
 	int tickInWorld = 0;
 	private void onClientTick(Minecraft client) {
-		if(!onASMP() || !ModConfig.get().enable) return;
+		if(!ModConfig.get().enable) return;
+		if(!ModConfig.get().ignoreServerRequirement && !onASMP()) return;
 		Player p = client.player;
 		if(p == null) return;
 		this.p = p;
 
 		tickInWorld++;
 
+		if(ModConfig.get().ticksBetweenSends < 0) ModConfig.get().ticksBetweenSends = 600;
+
 		if(tickInWorld % ModConfig.get().ticksBetweenSends == 0) {
+			debug("clearing old threads");
+			threads.clear();
 			debug("Attempting sending cached shops");
 			debug(cachedData.toString());
 			sendPost(cachedData);
@@ -141,7 +149,10 @@ public class Asmpshopget implements ModInitializer {
 			int amount = 0;
 			if(matcher.find()) amount = Integer.parseInt(matcher.group(2));
 
-			ShopDataHolder data = new ShopDataHolder(owner, position, Float.parseFloat(price.substring(1).replace(" each", "").replace(",", "")), item, action, amount );
+			int dimension = 0;
+
+			debug(world.dimension().location().toString());
+			ShopDataHolder data = new ShopDataHolder(owner, position, Float.parseFloat(price.substring(1).replace(" each", "").replace(",", "")), item, action, amount, dimension, server.ip);
 
 			if(!cachedData.contains(data)) {
 				cachedData.add(data);
@@ -154,9 +165,11 @@ public class Asmpshopget implements ModInitializer {
 		if(data.isEmpty()) return;
 
 		if(ModConfig.get().createNewThreadPerSend) {
-			new Thread(() -> {
+			Thread thread = new Thread(() -> {
 				reallySendPost(data);
-			}).start();
+			});
+			thread.start();
+			threads.add(thread);
 		} else {
 			reallySendPost(data);
 		}
@@ -164,9 +177,9 @@ public class Asmpshopget implements ModInitializer {
 
 	private void reallySendPost(List<ShopDataHolder> data) {
 			if(data.isEmpty()) return;
+			if(ModConfig.get().postUrl == null) return;
 			HttpPost post = new HttpPost(ModConfig.get().postUrl);
 			try {
-				debug("Made it to client creation");
 				CloseableHttpClient client = HttpClientBuilder.create().build();
 				StringEntity postString = new StringEntity(gson.toJson(data.toArray()), ContentType.APPLICATION_JSON);
 				post.setEntity(postString);

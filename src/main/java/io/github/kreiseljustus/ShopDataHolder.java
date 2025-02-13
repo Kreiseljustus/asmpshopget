@@ -10,14 +10,20 @@ public class ShopDataHolder {
     public String item;
     int action;                     // 0 is buying 1 is selling 2 is out of stock
     public int amount;
+    public int dimension; //0 overworld, 1 nether, 2 end
 
-    public ShopDataHolder(String owner, int[] position, float price, String item, int action, int amount) {
+    public String serverIp;
+
+    public ShopDataHolder(String owner, int[] position, float price, String item, int action, int amount, int dimension, String ip) {
         this.Owner = owner;
         this.position = position;
         this.price = price;
         this.item = item;
         this.action = action;
         this.amount = amount;
+        this.dimension = dimension;
+
+        serverIp = ip;
     }
 
     @Override
@@ -29,6 +35,7 @@ public class ShopDataHolder {
                 action == that.action &&
                 Objects.equals(Owner, that.Owner) &&
                 Arrays.equals(position, that.position) &&
-                Objects.equals(item, that.item);
+                Objects.equals(item, that.item) &&
+                serverIp.equals(that.serverIp);
     }
 }
