@@ -14,7 +14,7 @@ public class ModConfig implements ConfigData {
     public int ticksBetweenSends = 600;
     public boolean createNewThreadPerSend = false;
 
-    public boolean ignoreServerRequirement = false;
+    public boolean onlyEnableOnASMP = true;
 
     public static void register() {
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);

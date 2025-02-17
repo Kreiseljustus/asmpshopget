@@ -30,9 +30,9 @@ import net.minecraft.client.Minecraft;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,7 +49,7 @@ public class Asmpshopget implements ModInitializer {
 	static Player p = null;
 
 	List<ShopDataHolder> cachedData = new LinkedList<>();
-	List<Thread> threads = new LinkedList<>();
+	private final ExecutorService threadPool = Executors.newFixedThreadPool(4);
 
 	public static ServerData server = null;
 
@@ -72,7 +72,7 @@ public class Asmpshopget implements ModInitializer {
 	int tickInWorld = 0;
 	private void onClientTick(Minecraft client) {
 		if(!ModConfig.get().enable) return;
-		if(!ModConfig.get().ignoreServerRequirement && !onASMP()) return;
+		if(ModConfig.get().onlyEnableOnASMP && !onASMP()) return;
 		Player p = client.player;
 		if(p == null) return;
 		this.p = p;
@@ -82,16 +82,14 @@ public class Asmpshopget implements ModInitializer {
 		if(ModConfig.get().ticksBetweenSends < 0) ModConfig.get().ticksBetweenSends = 600;
 
 		if(tickInWorld % ModConfig.get().ticksBetweenSends == 0) {
-			debug("clearing old threads");
-			threads.clear();
 			debug("Attempting sending cached shops");
 			debug(cachedData.toString());
-			sendPost(cachedData);
+			List<ShopDataHolder> dataToSend = new ArrayList<>(cachedData);
+
+			sendPost(dataToSend);
 			cachedData.clear();
 		}
 
-		//Nether not supported yet
-		if(p.level().dimension() == Level.NETHER) return;
 		ChunkPos currentPos = new ChunkPos(p.getOnPos());
 		//p.displayClientMessage(Component.literal(currentPos.x + " " + currentPos.z), false);
 
@@ -152,7 +150,9 @@ public class Asmpshopget implements ModInitializer {
 			int dimension = 0;
 
 			debug(world.dimension().location().toString());
-			ShopDataHolder data = new ShopDataHolder(owner, position, Float.parseFloat(price.substring(1).replace(" each", "").replace(",", "")), item, action, amount, dimension, server.ip);
+			if(world.dimension().location().toString() == "minecraft:nether") dimension = 1;
+			else if (world.dimension().location().toString() == "minecraft:the_end") dimension = 2;
+			ShopDataHolder data = new ShopDataHolder(owner, position, Float.parseFloat(price.substring(1).replace(" each", "").replace(",", "")), item, action, amount, dimension, server == null ? "Singleplayer " : server.ip);
 
 			if(!cachedData.contains(data)) {
 				cachedData.add(data);
@@ -164,12 +164,8 @@ public class Asmpshopget implements ModInitializer {
 	private void sendPost(List<ShopDataHolder> data) {
 		if(data.isEmpty()) return;
 
-		if(ModConfig.get().createNewThreadPerSend) {
-			Thread thread = new Thread(() -> {
-				reallySendPost(data);
-			});
-			thread.start();
-			threads.add(thread);
+		if (ModConfig.get().createNewThreadPerSend) {
+			threadPool.submit(() -> reallySendPost(data));
 		} else {
 			reallySendPost(data);
 		}

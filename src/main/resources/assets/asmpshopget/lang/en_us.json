@@ -5,5 +5,5 @@
   "text.autoconfig.asmpshopget.option.createNewThreadPerSend": "Multithreaded",
   "text.autoconfig.asmpshopget.title": "ASMP ShopGet (send help)",
   "text.autoconfig.asmpshopget.option.enable": "Enable (please)",
-  "text.autoconfig.asmpshopget.option.ignoreServerRequirement": "Only enable on ASMP"
+  "text.autoconfig.asmpshopget.option.onlyEnableOnASMP": "Only enable on ASMP"
 }
