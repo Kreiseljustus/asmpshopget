@@ -38,4 +38,6 @@ public class ShopDataHolder {
                 Objects.equals(item, that.item) &&
                 serverIp.equals(that.serverIp);
     }
+
+
 }

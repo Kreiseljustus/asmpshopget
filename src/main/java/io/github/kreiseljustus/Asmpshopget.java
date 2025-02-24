@@ -6,6 +6,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -24,12 +25,17 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.minecraft.client.Minecraft;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -41,6 +47,11 @@ public class Asmpshopget implements ModInitializer {
 	public static final String MOD_ID = "asmpshopget";
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static final String VERSION = "1.0.10";
+	public static final String VERSION_URL = "https://kreiseljustus.com/asmp_version.txt";
+
+	public static boolean using_latest;
+	public static boolean warning_given = false;
 
 	private ChunkPos lastChunkPos;
 
@@ -66,7 +77,20 @@ public class Asmpshopget implements ModInitializer {
 		ModConfig.register();
 
 		ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
-	}
+
+		try{
+			String latestVersion = fetchVersionFromUrl(VERSION_URL);
+			if (latestVersion != null && isNewerVersion(latestVersion, VERSION)) {
+				System.out.println("A newer version is available: " + latestVersion);
+				using_latest = false;
+			} else {
+				System.out.println("You are using the latest version: " + VERSION);
+				using_latest = true;
+			}
+		} catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 	int tickInWorld = 0;
@@ -76,6 +100,8 @@ public class Asmpshopget implements ModInitializer {
 		Player p = client.player;
 		if(p == null) return;
 		this.p = p;
+
+		if(!using_latest && !warning_given) {p.displayClientMessage(Component.literal("Your version is outdated! You wont send any data until the mod is updated!").withStyle(ChatFormatting.RED), false); warning_given = true; return; }
 
 		tickInWorld++;
 
@@ -150,7 +176,7 @@ public class Asmpshopget implements ModInitializer {
 			int dimension = 0;
 
 			debug(world.dimension().location().toString());
-			if(world.dimension().location().toString() == "minecraft:nether") dimension = 1;
+			if(world.dimension().location().toString() == "minecraft:the_nether") dimension = 1;
 			else if (world.dimension().location().toString() == "minecraft:the_end") dimension = 2;
 			ShopDataHolder data = new ShopDataHolder(owner, position, Float.parseFloat(price.substring(1).replace(" each", "").replace(",", "")), item, action, amount, dimension, server == null ? "Singleplayer " : server.ip);
 
@@ -189,5 +215,42 @@ public class Asmpshopget implements ModInitializer {
 			} catch (IOException e) {
 				debug("IOException: " + e.getMessage());
 			}
+	}
+
+	private static String fetchVersionFromUrl(String versionUrl) throws Exception {
+		URL url = new URL(versionUrl);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestMethod("GET");
+		connection.setConnectTimeout(5000);
+		connection.setReadTimeout(5000);
+
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+			return reader.readLine(); // Assuming the version is on the first line
+		}
+	}
+
+	private static boolean isNewerVersion(String latest, String current) {
+		int[] latestParts = parseVersion(latest);
+		int[] currentParts = parseVersion(current);
+
+		for (int i = 0; i < latestParts.length; i++) {
+			if (latestParts[i] > currentParts[i]) {
+				return true;
+			} else if (latestParts[i] < currentParts[i]) {
+				return false;
+			}
+		}
+		return false;
+	}
+
+	private static int[] parseVersion(String version) {
+		Matcher matcher = Pattern.compile("\\d+").matcher(version);
+		int[] parts = new int[3]; // Assuming major.minor.patch format
+		int index = 0;
+
+		while (matcher.find() && index < 3) {
+			parts[index++] = Integer.parseInt(matcher.group());
+		}
+		return parts;
 	}
 }
