@@ -47,7 +47,7 @@ public class Asmpshopget implements ModInitializer {
 	public static final String MOD_ID = "asmpshopget";
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-	public static final String VERSION = "1.0.10";
+	public static final String VERSION = "1.0.11";
 	public static final String VERSION_URL = "https://kreiseljustus.com/asmp_version.txt";
 
 	public static boolean using_latest;
@@ -108,12 +108,35 @@ public class Asmpshopget implements ModInitializer {
 		if(ModConfig.get().ticksBetweenSends < 0) ModConfig.get().ticksBetweenSends = 600;
 
 		if(tickInWorld % ModConfig.get().ticksBetweenSends == 0) {
+			if(!using_latest) {debug("Discarding... not up-to date!"); return;}
 			debug("Attempting sending cached shops");
 			debug(cachedData.toString());
 			List<ShopDataHolder> dataToSend = new ArrayList<>(cachedData);
 
 			sendPost(dataToSend);
 			cachedData.clear();
+		}
+
+		if(tickInWorld % 6000 == 0) {
+			threadPool.submit(() -> {
+				try {
+					String latestVersion = fetchVersionFromUrl(VERSION_URL);
+					if (latestVersion != null && isNewerVersion(latestVersion, VERSION)) {
+						System.out.println("A newer version is available: " + latestVersion);
+						using_latest = false;
+					} else {
+						System.out.println("You are using the latest version: " + VERSION);
+						using_latest = true;
+					}
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+
+				if (!using_latest && !warning_given) {
+					p.displayClientMessage(Component.literal("Your version is outdated! You wont send any data until the mod is updated!").withStyle(ChatFormatting.RED), false);
+					warning_given = true;
+				}
+			});
 		}
 
 		ChunkPos currentPos = new ChunkPos(p.getOnPos());
@@ -176,8 +199,9 @@ public class Asmpshopget implements ModInitializer {
 			int dimension = 0;
 
 			debug(world.dimension().location().toString());
-			if(world.dimension().location().toString() == "minecraft:the_nether") dimension = 1;
-			else if (world.dimension().location().toString() == "minecraft:the_end") dimension = 2;
+			if(world.dimension().location().toString().equals("minecraft:the_nether")) dimension = 1;
+			else if (world.dimension().location().toString().equals("minecraft:the_end")) dimension = 2;
+			debug("Dimesnion is " + dimension);
 			ShopDataHolder data = new ShopDataHolder(owner, position, Float.parseFloat(price.substring(1).replace(" each", "").replace(",", "")), item, action, amount, dimension, server == null ? "Singleplayer " : server.ip);
 
 			if(!cachedData.contains(data)) {
