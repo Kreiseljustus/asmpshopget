@@ -35,6 +35,8 @@ dependencies {
 	modImplementation "com.ptsmods:devlogin:3.5"
 }
 
+
+
 processResources {
 	inputs.property "version", project.version
 

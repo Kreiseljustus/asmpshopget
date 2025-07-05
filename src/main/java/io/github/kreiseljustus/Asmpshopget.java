@@ -1,6 +1,7 @@
 package io.github.kreiseljustus;
 
 import com.google.gson.Gson;
+import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
@@ -47,17 +48,20 @@ public class Asmpshopget implements ModInitializer {
 	public static final String MOD_ID = "asmpshopget";
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-	public static final String VERSION = "1.0.11";
+	public static final String VERSION = "1.0.12";
 	public static final String VERSION_URL = "https://kreiseljustus.com/asmp_version.txt";
 
 	public static boolean using_latest;
 	public static boolean warning_given = false;
+	public static boolean depreceatedMessage = false;
 
 	private ChunkPos lastChunkPos;
 
 	Gson gson = new Gson();
 
 	static Player p = null;
+
+	static Timer t = new Timer();
 
 	List<ShopDataHolder> cachedData = new LinkedList<>();
 	private final ExecutorService threadPool = Executors.newFixedThreadPool(4);
@@ -69,7 +73,7 @@ public class Asmpshopget implements ModInitializer {
 
         server = client.getCurrentServer();
         if (server == null) return false;
-        return server.ip.equals("aclu.r2f.co");
+        return server.ip.equals("asmp.cc")|| server.ip.equals("aclu.r2f.co");
     }
 
 	@Override
@@ -102,6 +106,17 @@ public class Asmpshopget implements ModInitializer {
 		this.p = p;
 
 		if(!using_latest && !warning_given) {p.displayClientMessage(Component.literal("Your version is outdated! You wont send any data until the mod is updated!").withStyle(ChatFormatting.RED), false); warning_given = true; return; }
+
+		if(tickInWorld % 6000 == 0 && !depreceatedMessage && ModConfig.get().enable) {
+			p.displayClientMessage(Component.literal("Thank you for using the mod! As season 3 is right around the corner i have to update the mod and will be updating the website too. Because i have exams during season start this may take a while! The mod will now disable itself Sadge").withStyle(ChatFormatting.BLUE), false);
+			depreceatedMessage = true;
+
+			ModConfig.get().enable = false;
+
+			AutoConfig.getConfigHolder(ModConfig.class).save();
+		}
+
+		System.out.println(ModConfig.get().enable);
 
 		tickInWorld++;
 
@@ -201,7 +216,7 @@ public class Asmpshopget implements ModInitializer {
 			debug(world.dimension().location().toString());
 			if(world.dimension().location().toString().equals("minecraft:the_nether")) dimension = 1;
 			else if (world.dimension().location().toString().equals("minecraft:the_end")) dimension = 2;
-			debug("Dimesnion is " + dimension);
+			debug("Dimension is " + dimension);
 			ShopDataHolder data = new ShopDataHolder(owner, position, Float.parseFloat(price.substring(1).replace(" each", "").replace(",", "")), item, action, amount, dimension, server == null ? "Singleplayer " : server.ip);
 
 			if(!cachedData.contains(data)) {
