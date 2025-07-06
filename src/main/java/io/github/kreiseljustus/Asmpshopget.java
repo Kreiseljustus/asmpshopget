@@ -264,7 +264,7 @@ public class Asmpshopget implements ModInitializer {
 		connection.setReadTimeout(5000);
 
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-			return reader.readLine(); // Assuming the version is on the first line
+			return reader.readLine();
 		}
 	}
 
@@ -284,7 +284,7 @@ public class Asmpshopget implements ModInitializer {
 
 	private static int[] parseVersion(String version) {
 		Matcher matcher = Pattern.compile("\\d+").matcher(version);
-		int[] parts = new int[3]; // Assuming major.minor.patch format
+		int[] parts = new int[3];
 		int index = 0;
 
 		while (matcher.find() && index < 3) {
