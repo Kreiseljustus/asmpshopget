@@ -11,7 +11,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Asmpshopget implements ModInitializer {
-    ModConfig config;
+    static final String VERSION = "1.0.11";
+    static final String VERSION_URL = "https://kreiseljustus.com/asmp_version.txt";
+
+    ModConfig m_Config;
 
     @Override
     public void onInitialize() {
@@ -21,10 +24,10 @@ public class Asmpshopget implements ModInitializer {
     }
 
     public void onClientTick(MinecraftClient client) {
-        config = ModConfig.get();
-        if(!config.enable) return;
-        if(!config.allowOnAllServers && !Utils.onASMP()) return;
+        m_Config = ModConfig.get();
+        if(!m_Config.enable) return;
+        if(!m_Config.allowOnAllServers && !Utils.onASMP()) return;
 
-        ClientPlayerEntity p = client.player;
+        VersionManagment.checkAndWarnVersion(client.player);
     }
 }
