@@ -27,6 +27,7 @@ public class Asmpshopget implements ModInitializer {
         m_Config = ModConfig.get();
         if(!m_Config.enable) return;
         if(!m_Config.allowOnAllServers && !Utils.onASMP()) return;
+        if(client.player == null) return;
 
         VersionManagment.checkAndWarnVersion(client.player);
     }

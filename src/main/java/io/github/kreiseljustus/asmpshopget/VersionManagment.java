@@ -16,13 +16,13 @@ public class VersionManagment {
     public static boolean s_UsingLatestVersion;
 
     public static void checkAndWarnVersion(PlayerEntity player) {
-        if(isNewestVersion()) return;
+        if(!isOldVersion()) return;
         player.sendMessage(Text.of("Your version is outdated! You wont contribute any data until the mod is updated."), false);
 
         s_UsingLatestVersion = false;
     }
 
-    public static boolean isNewestVersion() {
+    public static boolean isOldVersion() {
         try {
             int[] latestVersionParts = parseVersion(fetchVersionFromUrl(Asmpshopget.VERSION_URL));
             int[] currentParts = parseVersion(Asmpshopget.VERSION);
