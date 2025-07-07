@@ -3,6 +3,7 @@ package io.github.kreiseljustus.asmpshopget;
 import net.fabricmc.loader.api.VersionParsingException;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.text.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -19,5 +20,10 @@ public class Utils {
         ServerInfo server = client.getCurrentServerEntry();
         if(server == null) return false;
         return server.address.equals("asmp.cc");
+    }
+
+    public static void debug(String message) {
+        if(!Asmpshopget.s_Config.enableDebugMode) return;
+        Asmpshopget.s_Player.sendMessage(Text.of(message), false);
     }
 }

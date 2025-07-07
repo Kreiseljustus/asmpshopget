@@ -6,20 +6,36 @@ import net.minecraft.text.Text;
 import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VersionManagment {
     public static boolean s_UsingLatestVersion;
+    private static boolean s_WarningGiven = false;
+
+    public static boolean season3Start() throws IOException {
+        URL url = new URL("https://kreiseljustus.com/asmp/season3Start.txt");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+            return reader.read() == 49;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static void checkAndWarnVersion(PlayerEntity player) {
-        if(!isOldVersion()) return;
+        if(!isOldVersion()) {s_UsingLatestVersion = true; Utils.debug("Using latest version!"); return;}
+        if(s_WarningGiven) return;
         player.sendMessage(Text.of("Your version is outdated! You wont contribute any data until the mod is updated."), false);
 
         s_UsingLatestVersion = false;
+        s_WarningGiven = true;
     }
 
     public static boolean isOldVersion() {
