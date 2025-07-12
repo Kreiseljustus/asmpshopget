@@ -50,7 +50,7 @@ public class VersionManagment {
                     return false;
                 }
             }
-            return true;
+            return false;
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse asmpshopget version. Make sure youre up-to date");
         }
