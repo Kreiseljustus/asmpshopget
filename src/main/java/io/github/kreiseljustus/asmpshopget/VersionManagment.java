@@ -18,17 +18,6 @@ public class VersionManagment {
     public static boolean s_UsingLatestVersion;
     private static boolean s_WarningGiven = false;
 
-    public static boolean season3Start() throws IOException {
-        URL url = new URL("https://kreiseljustus.com/asmp/season3Start.txt");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-            return reader.read() == 49;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static void checkAndWarnVersion(PlayerEntity player) {
         if(!isOldVersion()) {s_UsingLatestVersion = true; Utils.debug("Using latest version!"); return;}
         if(s_WarningGiven) return;
