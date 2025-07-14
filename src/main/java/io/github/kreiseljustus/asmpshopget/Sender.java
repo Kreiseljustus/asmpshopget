@@ -11,26 +11,38 @@ import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClientConfig;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Sender {
     static Gson gson = new Gson();
 
-    public static void sendShopDataCached(List<ShopDataHolder> shops) {
-        if(shops.isEmpty()) {Utils.debug("No cached shops to send"); return;}
+    public static void sendCachedData() {
+        List<ShopDataHolder> shops = new ArrayList<>(ShopDataManager.s_CachedShops);
+        List<WaystoneDataHolder> waystones = new ArrayList<>(WaystoneManager.s_CachedWaystones);
+
+        if(shops.isEmpty() && waystones.isEmpty()) {
+            Utils.debug("No cached data to send");
+            return;
+        }
 
         ModConfig config = Asmpshopget.s_Config;
-
         if(config.postUrl == null || config.postUrl.isEmpty()) return;
+
         HttpPost post = new HttpPost(config.postUrl);
         new Thread(() -> {
-            try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-                StringEntity postString = new StringEntity(gson.toJson(shops.toArray()), ContentType.APPLICATION_JSON);
+            try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
+                DataUploadPacket packet = new DataUploadPacket(shops,waystones);
+                StringEntity postString = new StringEntity(gson.toJson(packet), ContentType.APPLICATION_JSON);
+                Utils.debug(gson.toJson(packet));
                 post.setEntity(postString);
                 post.setHeader("Content-Type", "application/json");
+
                 client.execute(post);
+                Utils.debug("Sent cached shops & waystone data.");
             } catch (Exception e) {
                 e.printStackTrace();
+                Utils.debug(e.getMessage());
             }
         }).start();
     }

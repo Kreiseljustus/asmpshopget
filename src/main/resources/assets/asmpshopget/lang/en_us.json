@@ -2,8 +2,9 @@
   "text.autoconfig.asmpshopget.option.enableDebugMode": "(Dev) Enable Debug Mode",
   "text.autoconfig.asmpshopget.option.postUrl": "Server URL",
   "text.autoconfig.asmpshopget.option.ticksBetweenSends": "Ticks between sending updates",
-  "text.autoconfig.asmpshopget.option.createNewThreadPerSend": "(Unsafe) Multithreaded",
   "text.autoconfig.asmpshopget.title": "ASMP ShopGet (send help)",
   "text.autoconfig.asmpshopget.option.enable": "Enable (please)",
-  "text.autoconfig.asmpshopget.option.allowOnAllServers": "(Dev) Allow on all servers"
+  "text.autoconfig.asmpshopget.option.allowOnAllServers": "(Dev) Allow on all servers",
+  "text.autoconfig.asmpshopget.option.trackShops": "Track shops",
+  "text.autoconfig.asmpshopget.option.trackWaystones": "Track waytones"
 }

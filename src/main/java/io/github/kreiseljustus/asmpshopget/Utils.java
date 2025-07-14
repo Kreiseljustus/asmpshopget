@@ -23,7 +23,7 @@ public class Utils {
     }
 
     public static void debug(String message) {
-        if(!Asmpshopget.s_Config.enableDebugMode) return;
+        if(!Asmpshopget.s_Config.enableDebugMode || !Asmpshopget.s_Config.enable) return;
         Asmpshopget.s_Player.sendMessage(Text.of(message), false);
     }
 }

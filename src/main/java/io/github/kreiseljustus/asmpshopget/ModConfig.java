@@ -8,11 +8,12 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 @Config(name = "asmpshopget")
 public class ModConfig implements ConfigData {
     public boolean enable = true;
-    public boolean enableDebugMode = false;
+    public boolean trackShops = true;
+    public boolean trackWaystones = true;
     public String postUrl = "https://kreiseljustus.com/asmp/post";
     public int ticksBetweenSends = 600;
-    public boolean createNewThreadPerSend = false;
 
+    public boolean enableDebugMode = false;
     public boolean allowOnAllServers = false;
 
     public static void register() {
