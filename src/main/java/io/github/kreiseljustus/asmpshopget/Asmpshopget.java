@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 
 public class Asmpshopget implements ModInitializer {
 
-    static final String VERSION = "1.0.17";
+    static final String VERSION = "1.0.18";
     static final String VERSION_URL = "https://kreiseljustus.com/asmp_version.txt";
 
     public static ModConfig s_Config;
@@ -102,7 +102,7 @@ public class Asmpshopget implements ModInitializer {
 
         Chunk chunk = world.getChunk(currentChunk.getStartPos());
 
-        for(BlockPos pos : chunk.getBlockEntityPositions()) {
+        for (BlockPos pos : chunk.getBlockEntityPositions()) {
             BlockEntity entity = world.getBlockEntity(pos);
             Utils.debug("Entity: " + entity.getType().getRegistryEntry());
             Utils.debug("EntityPos: " + entity.getPos());
@@ -123,23 +123,27 @@ public class Asmpshopget implements ModInitializer {
             }
 
             SignText text = sign.getFrontText();
-            if (!(text.getMessages(false).length == 4)) {
-                Utils.debug("Not 4 lines of text on sign");
-                continue;
-            }
 
-            String owner = text.getMessage(0, false).getString();
-            String sellBuyOOS = text.getMessage(1, false).getString();
+            String[] lines = Arrays.stream(text.getMessages(false)).map(Text::getString).toArray(String[]::new);
+
+            if (lines.length != 4) continue;
+
+            String owner = lines[0];
+            if(owner.isEmpty()) continue;
+            String sellBuyOOS = lines[1];
+            if(sellBuyOOS.isEmpty()) continue;
 
             if (!(sellBuyOOS.contains("Selling") || sellBuyOOS.contains("Buying") || sellBuyOOS.contains("Out of Stock"))) {
                 Utils.debug("not selling, buying, oos");
                 continue;
             }
 
-            String item = text.getMessage(2, false).getString();
-            String price = text.getMessage(3, false).getString();
+            String item = lines[2];
+            if(item.isEmpty()) continue;
+            String price = lines[3];
+            if(price.isEmpty()) continue;
 
-            Utils.debug(owner + " is " + sellBuyOOS + " " + item + " for " + price);
+            //Utils.debug(owner + " is " + sellBuyOOS + " " + item + " for " + price);
 
             int[] position = {
                     pos.getX(), pos.getY(), pos.getZ()
@@ -149,19 +153,24 @@ public class Asmpshopget implements ModInitializer {
             if (sellBuyOOS.contains("Selling")) action = 1;
             else if (sellBuyOOS.contains("Out of Stock")) action = 2;
 
-            String regex = "(Selling|Buying)\\s(\\d+)";
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(sellBuyOOS);
+            Matcher matcher = Pattern.compile("(Selling|Buying)\\s(\\d+)").matcher(sellBuyOOS);
 
             int amount = 0;
-            if (matcher.find()) amount = Integer.parseInt(matcher.group(2));
+            try {
+                amount = matcher.find() ? Integer.parseInt(matcher.group(2)) : 0;
+            } catch(Exception e) {
+                Utils.debug(e.getMessage());
+            }
 
-            int dimension = 0;
+            int dimension = switch (world.getDimensionEntry().toString()) {
+                case "minecraft:the_nether" -> 1;
+                case "minecraft:the_end" -> 2;
+                default -> 0;
+            };
 
-            if (world.getDimensionEntry().toString().equals("minecraft:the_nether")) dimension = 1;
-            else if (world.getDimensionEntry().toString().equals("minecraft:the_end")) dimension = 2;
+            if(!price.contains(" each")) continue;
 
-            Utils.debug("Dimension is " + dimension);
+            //Utils.debug("Dimension is " + dimension);
             ShopDataHolder shop = null;
             try {
                 shop = new ShopDataHolder(owner, position, Float.parseFloat(price.substring(1).replace(" each", "").replace(",", "")), item, action, amount, dimension);
