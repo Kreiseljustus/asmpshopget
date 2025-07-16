@@ -10,9 +10,9 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 public class ModConfig implements ConfigData {
     @ConfigEntry.Category("General")
     public boolean enable = true;
-    @ConfigEntry.Category("General")
+    @ConfigEntry.Category("Tracking")
     public boolean trackShops = true;
-    @ConfigEntry.Category("General")
+    @ConfigEntry.Category("Tracking")
     public boolean trackWaystones = true;
     @ConfigEntry.Category("General")
     public String postUrl = "https://kreiseljustus.com/asmp/post";
