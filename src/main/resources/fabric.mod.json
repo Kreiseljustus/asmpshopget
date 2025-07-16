@@ -4,11 +4,11 @@
   "version": "${version}",
 
   "name": "asmpshopget",
-  "description": "",
-  "authors": [],
-  "contact": {},
+  "description": "POGGIES",
+  "authors": ["Crisel"],
+  "contact": {"homepage":  "https://kreiseljustus.com", "sources":  "https://github.com/Kreiseljustus/asmpshopget"},
 
-  "license": "All-Rights-Reserved",
+  "license": "CC0-1.0",
   "icon": "assets/asmpshopget/icon.png",
 
   "environment": "client",
@@ -22,6 +22,8 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": "${minecraft_version}",
+    "cloth-config": ">=12.0.118",
+    "modmenu": ">=8.0.1"
   }
 }
