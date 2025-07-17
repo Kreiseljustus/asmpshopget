@@ -37,9 +37,11 @@ public class WaystoneManager {
         return true;
     }
 
-    public static String getWaystoneOwner(ScreenHandler handler) {
+    public static String getWaystoneOwner(ScreenHandler handler, MinecraftClient client) {
         ItemStack head = handler.getSlot(5).getStack();
-        return head.getCustomName() == null ? "Unknown" : head.getCustomName().getString();
+        String owner = head.getCustomName() == null ? "Unknown" : head.getCustomName().getString();
+        if (owner.equals("Waystone Options")) {owner = client.getSession().getUsername();}
+        return owner;
     }
 
     public static void waystoneTick(MinecraftClient client) {
@@ -56,7 +58,7 @@ public class WaystoneManager {
 
             if(isWaystoneUI(handler)) {
                 Utils.debug("The screen is a waystone");
-                String owner = getWaystoneOwner(handler);
+                String owner = getWaystoneOwner(handler, client);
                 String name = screen.getTitle().getString();
 
                 BlockHitResult hit = (client.crosshairTarget instanceof BlockHitResult br) ? br : null;
