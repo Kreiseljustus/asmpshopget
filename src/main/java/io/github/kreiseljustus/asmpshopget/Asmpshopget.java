@@ -16,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -44,6 +45,8 @@ public class Asmpshopget implements ModInitializer {
 
         ModConfig.register();
 
+        s_Config = ModConfig.get();
+
         ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
 
         ClientTickEvents.END_CLIENT_TICK.register(WaystoneManager::waystoneTick);
@@ -59,6 +62,27 @@ public class Asmpshopget implements ModInitializer {
                 VersionManagment.checkAndWarnVersion(client.player);
             }
         },0,300_000);
+
+        Thread fetcherThread = new Thread(() -> {
+            while (true) {
+                try {
+                    if(!ModConfig.get().enable) Thread.sleep(s_Config.fetcherThreadInterval);
+                    ServerValidator.getServerData();
+                } catch (Exception e) {
+                    Utils.debug("This will crash minecraft");
+                }
+
+                try {
+                    Thread.sleep(s_Config.fetcherThreadInterval);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        });
+
+        fetcherThread.setDaemon(true);
+        fetcherThread.start();
     }
 
     public void onClientTick(MinecraftClient client) {
@@ -109,6 +133,8 @@ public class Asmpshopget implements ModInitializer {
         World world = s_Player.getWorld();
 
         Chunk chunk = world.getChunk(currentChunk.getStartPos());
+
+        List<ShopDataHolder> foundShops = new ArrayList<>();
 
         for (BlockPos pos : chunk.getBlockEntityPositions()) {
             BlockEntity entity = world.getBlockEntity(pos);
@@ -187,6 +213,16 @@ public class Asmpshopget implements ModInitializer {
             }
 
             ShopDataManager.addShop(shop);
+            foundShops.add(shop);
+        }
+
+        List<ShopDataHolder> shops = ServerValidator.getExpectedShopsInChunk(chunk.getPos().x, chunk.getPos().z);
+
+        for(ShopDataHolder expectedShop : shops) {
+            if(foundShops.contains(expectedShop)) continue;
+
+            //Send update to server
+            Sender.sendDeleteRequest(expectedShop);
         }
     }
 }

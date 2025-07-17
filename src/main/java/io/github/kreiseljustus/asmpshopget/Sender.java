@@ -11,11 +11,44 @@ import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClientConfig;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Sender {
     static Gson gson = new Gson();
+
+    public static void sendDeleteRequest(WaystoneDataHolder waystone) {
+        sendDeleteRequest(null, waystone);
+    }
+
+    public static void sendDeleteRequest(ShopDataHolder shop) {
+        sendDeleteRequest(shop, null);
+    }
+
+    public static void sendDeleteRequest(ShopDataHolder shop, WaystoneDataHolder waystone) {
+        if(shop != null && waystone != null) return;
+
+        String dataJson = shop == null ? gson.toJson(waystone) : gson.toJson(shop);
+
+        String requestBody = String.format("{\"type\":\"shop\",\"data\":%s}", dataJson);
+
+        HttpPost post = new HttpPost(Asmpshopget.s_Config.deleteRoute);
+        new Thread(() -> {
+            try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
+                StringEntity postString = new StringEntity(requestBody, ContentType.APPLICATION_JSON);
+                post.setEntity(postString);
+                post.setHeader("Content-Type", "application/json");
+
+                client.execute(post);
+                Utils.debug("Sent delete request for " + requestBody);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Utils.debug(e.getMessage());
+            }
+        }).start();
+    }
 
     public static void sendCachedData() {
         List<ShopDataHolder> shops = new ArrayList<>(ShopDataManager.s_CachedShops);

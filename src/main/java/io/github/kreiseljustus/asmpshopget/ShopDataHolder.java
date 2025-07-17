@@ -48,4 +48,11 @@ public class ShopDataHolder {
                 Arrays.equals(position, that.position) &&
                 Objects.equals(item, that.item);
     }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(Owner, position, price,item,action,amount,dimension);
+        result = 31 * result + Arrays.hashCode(position);
+        return result;
+    }
 }
