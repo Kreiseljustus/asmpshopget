@@ -29,7 +29,14 @@ public class VersionManagment {
 
     public static boolean isOldVersion() {
         try {
-            int[] latestVersionParts = parseVersion(fetchVersionFromUrl(Asmpshopget.VERSION_URL));
+            String versionString = fetchVersionFromUrl(Asmpshopget.VERSION_URL);
+
+            if(versionString == null || versionString.isEmpty()) {
+                Utils.debug("Failed to retrieve latest version. Please report this");
+                return false;
+            }
+
+            int[] latestVersionParts = parseVersion(versionString);
             int[] currentParts = parseVersion(Asmpshopget.VERSION);
 
             for(int i = 0; i < latestVersionParts.length; i++) {
@@ -46,13 +53,18 @@ public class VersionManagment {
     }
 
     private static String fetchVersionFromUrl(String versionUrl) throws Exception {
-        URL url = new URL(versionUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setConnectTimeout(5000);
+        try {
+            URL url = new URL(versionUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
 
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-            return reader.readLine();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                return reader.readLine();
+            }
+        } catch(Exception e) {
+            Utils.debug("Failed to fetch version! Please report this to Crisel on discord");
+            return null;
         }
     }
 

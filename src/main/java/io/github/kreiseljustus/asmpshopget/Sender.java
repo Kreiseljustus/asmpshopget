@@ -19,6 +19,21 @@ import java.util.Optional;
 public class Sender {
     static Gson gson = new Gson();
 
+    public static void sendPostRequest(String data, String url) {
+        HttpPost post = new HttpPost(url);
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        StringEntity postString = new StringEntity(data, ContentType.APPLICATION_JSON);
+        post.setEntity(postString);
+        post.setHeader("Content-Type", "application/json");
+
+        try {
+            client.execute(post);
+            client.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        };
+    }
+
     public static void sendDeleteRequest(WaystoneDataHolder waystone) {
         sendDeleteRequest(null, waystone);
     }

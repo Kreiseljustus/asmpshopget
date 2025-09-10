@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 
 public class Asmpshopget implements ModInitializer {
 
-    static final String VERSION = "1.1.0";
+    static final String VERSION = "1.1.1";
     static final String VERSION_URL = "https://kreiseljustus.com/asmp_version.txt";
 
     public static ModConfig s_Config;
@@ -96,6 +96,15 @@ public class Asmpshopget implements ModInitializer {
 
         if(!checkedVersionOnStartup) {
             VersionManagment.checkAndWarnVersion(client.player);
+
+            if(s_Config.sendUsername) {
+                Utils.debug(("{\"username\":\"" + client.player.getName() + "\"}"));
+                //client.player.sendMessage(Text.of("Your username will be sent to the server and stored to see how many people have the mod! You can opt-out in the config. This data is not used for ANYTHING else"), false);
+                new Thread(() -> {
+                    Sender.sendPostRequest("{\"username\":\"" + client.player.getName() + "\"}", "https://kreiseljustus.com/asmp/api/username");
+                }).start();
+                }
+
             checkedVersionOnStartup = true;
         }
 
@@ -204,7 +213,6 @@ public class Asmpshopget implements ModInitializer {
 
             if(!price.contains(" each")) continue;
 
-            //Utils.debug("Dimension is " + dimension);
             ShopDataHolder shop = null;
             try {
                 shop = new ShopDataHolder(owner, position, Float.parseFloat(price.substring(1).replace(" each", "").replace(",", "")), item, action, amount, dimension);

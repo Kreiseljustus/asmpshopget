@@ -19,12 +19,11 @@ public class ServerValidator {
     private static List<ShopDataHolder> s_ServerShops = new ArrayList<>();
     private static List<WaystoneDataHolder> s_ServerWaystones = new ArrayList<>();
 
-
     //We love duplicating code
     public static List<WaystoneDataHolder> getExpectedWaystonesInChunk(int chunkX, int chunkZ) {
         List<WaystoneDataHolder> result = new ArrayList<>();
 
-        if(s_ServerShops.isEmpty()) return result;
+        if(s_ServerShops == null || s_ServerShops.isEmpty()) return result;
 
         for(WaystoneDataHolder waystone : s_ServerWaystones) {
             int[] pos = waystone.position;
@@ -43,7 +42,7 @@ public class ServerValidator {
     public static List<ShopDataHolder> getExpectedShopsInChunk(int chunkX, int chunkZ) {
         List<ShopDataHolder> result = new ArrayList<>();
 
-        if(s_ServerShops.isEmpty()) return result;
+        if(s_ServerShops == null || s_ServerShops.isEmpty()) return result;
 
         for(ShopDataHolder shop : s_ServerShops) {
             int[] pos = shop.position;

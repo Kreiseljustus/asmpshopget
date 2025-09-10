@@ -25,6 +25,9 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("General")
     public int fetcherThreadInterval = 15 * 60 * 1000;
 
+    @ConfigEntry.Category("General")
+    public boolean sendUsername = true;
+
     @ConfigEntry.Category("Dev")
     public boolean enableDebugMode = false;
     @ConfigEntry.Category("Dev")
