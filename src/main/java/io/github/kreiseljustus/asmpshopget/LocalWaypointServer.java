@@ -29,7 +29,14 @@ public class LocalWaypointServer {
         // Waypoint endpoint for receiving POST requests
         server.createContext("/waypoint", exchange -> {
             // CORS headers for browser requests
-            exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "https://kreiseljustus.com");
+
+            String origin = exchange.getRequestHeaders().getFirst("Origin");
+            if (origin != null) {
+                if (origin.equals("https://kreiseljustus.com") || origin.startsWith("http://localhost")) {
+                    exchange.getResponseHeaders().add("Access-Control-Allow-Origin", origin);
+                }
+            }
+
             exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "POST, OPTIONS");
             exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
 
@@ -46,10 +53,13 @@ public class LocalWaypointServer {
                     JsonObject json = JsonParser.parseString(body).getAsJsonObject();
                     // Parse waypoint data
                     String name = json.get("name").getAsString();
-                    int x = json.get("x").getAsInt(), y = json.get("y").getAsInt(), z = json.get("z").getAsInt();
+                    int x = json.get("x").getAsInt();
+                    int y = json.get("y").getAsInt();
+                    int z = json.get("z").getAsInt();
+
                     int dim = json.get("dimension").getAsInt();
                     String dimension = (dim == 1) ? "the_nether" : (dim == 2) ? "the_end" : "overworld";
-                    System.out.println("Received waypoint: " + name + " (" + x + ", " + y + ", " + z + ", " + dimension + ")");
+                    Utils.debug("Received waypoint: " + name + " (" + x + ", " + y + ", " + z + ", " + dimension + ")");
 
                     // Send formatted chat message to the local player only
                     MinecraftClient client = MinecraftClient.getInstance();
