@@ -83,6 +83,12 @@ public class Asmpshopget implements ModInitializer {
 
         fetcherThread.setDaemon(true);
         fetcherThread.start();
+
+        try {
+            new LocalWaypointServer().start();
+        } catch (Exception e) {
+            Utils.debug("Failed to start LocalWaypointServer: " + e.getMessage());
+        }
     }
 
     public void onClientTick(MinecraftClient client) {
