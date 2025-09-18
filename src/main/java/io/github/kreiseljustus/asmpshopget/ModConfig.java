@@ -22,11 +22,13 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("General")
     @ConfigEntry.Gui.Tooltip
     public int ticksBetweenSends = 600;
-    @ConfigEntry.Category("General")
+    @ConfigEntry.Category("Dev")
     public int fetcherThreadInterval = 15 * 60 * 1000;
 
     @ConfigEntry.Category("General")
     public boolean sendUsername = true;
+    @ConfigEntry.Category("General")
+    public boolean enableWaypointFeature = true;
 
     @ConfigEntry.Category("Dev")
     public boolean enableDebugMode = false;

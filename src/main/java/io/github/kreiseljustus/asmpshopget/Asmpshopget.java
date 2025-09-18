@@ -17,6 +17,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import org.apache.logging.log4j.core.jmx.Server;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -24,7 +25,7 @@ import java.util.regex.Pattern;
 
 public class Asmpshopget implements ModInitializer {
 
-    static final String VERSION = "1.1.1";
+    static final String VERSION = "1.2.0";
     static final String VERSION_URL = "https://kreiseljustus.com/asmp_version.txt";
 
     public static ModConfig s_Config;
@@ -63,6 +64,19 @@ public class Asmpshopget implements ModInitializer {
             }
         },0,300_000);
 
+        Thread fetcherThread = getThread();
+        fetcherThread.start();
+
+        try {
+            if(s_Config.enableWaypointFeature) {
+                new LocalWaypointServer().start();
+            }
+        } catch (Exception e) {
+            Utils.debug("Failed to start LocalWaypointServer: " + e.getMessage());
+        }
+    }
+
+    private static @NotNull Thread getThread() {
         Thread fetcherThread = new Thread(() -> {
             while (true) {
                 try {
@@ -82,7 +96,7 @@ public class Asmpshopget implements ModInitializer {
         });
 
         fetcherThread.setDaemon(true);
-        fetcherThread.start();
+        return fetcherThread;
     }
 
     public void onClientTick(MinecraftClient client) {
