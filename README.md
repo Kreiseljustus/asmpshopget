@@ -1,7 +1,27 @@
-This mod is used to get the prices of player made shops on the AtriocSMP. This data is then sent to a post address specified in the config of the mod where it can be used to generate a online list of available shops on the SMP.
+# About
 
-This mod can be disabled in the config and has Mod Menu support
-This mod online works while on the ASMP!
+ASMP ShopGet is a Minecraft Mod designed around player-made shops on a server i play on. <br>
+It collects data from shops by parsing sign data and then sends them to a seperate [website](https://github.com/Kreiseljustus/ASMP-Shop-Site) to display them online without having to be playing on the server.
 
-The source code is available [here](https://github.com/Kreiseljustus/asmpshopget)
-The website for the ASMP is [here](https://kreiseljustus.com/asmp)
+## Building
+
+1. Clone the repository
+2. Import the gradle project in your IDE
+3. To start the project run the 'runClient' gradle task.
+4. To build the project into a .jar run the 'build' gradle task.
+
+## Configuration
+
+The configuration file can be found in your Minecraft profile folder under 'configs/asmpshopget.json'. <br>
+ASMP ShopGet also provides a [Mod Menu](https://modrinth.com/mod/modmenu/) api implementation for editing the config while in-game! <br>
+
+## Contributing
+
+1. Fork the project
+2. Make your changes
+3. Open a pull request
+4. Wait until its declined/accepted
+
+# License
+
+CC0 1.0 Universal
