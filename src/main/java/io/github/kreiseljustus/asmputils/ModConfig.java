@@ -25,6 +25,13 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("Dev")
     public int fetcherThreadInterval = 15 * 60 * 1000;
 
+    @ConfigEntry.Category("Modules")
+    @ConfigEntry.Gui.Tooltip
+    public boolean enableShopModule = true;
+    @ConfigEntry.Category("Modules")
+    @ConfigEntry.Gui.Tooltip
+    public boolean enableWaystoneModule = true;
+
     @ConfigEntry.Category("General")
     public boolean enableWaypointFeature = true;
 

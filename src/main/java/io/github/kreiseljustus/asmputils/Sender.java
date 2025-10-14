@@ -7,31 +7,11 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Sender {
     static Gson gson = new Gson();
-
-    public static void sendPostRequest(String data, String url) {
-        HttpPost post = new HttpPost(url);
-        CloseableHttpClient client = HttpClientBuilder.create().build();
-        StringEntity postString = new StringEntity(data, ContentType.APPLICATION_JSON);
-        post.setEntity(postString);
-        post.setHeader("Content-Type", "application/json");
-
-        try {
-            client.execute(post);
-            client.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        };
-    }
-
-    public static void sendDeleteRequest(WaystoneDataHolder waystone) {
-        sendDeleteRequest(null, waystone);
-    }
 
     public static void sendDeleteRequest(ShopDataHolder shop) {
         sendDeleteRequest(shop, null);
@@ -62,7 +42,7 @@ public class Sender {
 
     public static void sendCachedData() {
         List<ShopDataHolder> shops = new ArrayList<>(ShopDataManager.s_CachedShops);
-        List<WaystoneDataHolder> waystones = new ArrayList<>(WaystoneManager.s_CachedWaystones);
+        List<WaystoneDataHolder> waystones = new ArrayList<>(WaystoneModule.s_CachedWaystones);
 
         if(shops.isEmpty() && waystones.isEmpty()) {
             Utils.debug("No cached data to send");

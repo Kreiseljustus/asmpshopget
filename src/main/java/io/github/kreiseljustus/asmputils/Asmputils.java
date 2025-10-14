@@ -1,12 +1,12 @@
 package io.github.kreiseljustus.asmputils;
 
+import io.github.kreiseljustus.asmputils.core.IModule;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.ChunkPos;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -17,11 +17,13 @@ public class Asmputils implements ModInitializer {
     private static LocalWaypointServer waypointServer = null;
 
     Timer timer = new Timer();
-    int tickInServer = 0;
+    static int s_TicksInASMPServer = 0;
 
     boolean checkedVersionOnStartup = false;
 
     ChunkPos lastChunkPosition = null;
+
+    List<IModule> modules = new ArrayList<>();
 
     @Override
     public void onInitialize() {
@@ -30,9 +32,6 @@ public class Asmputils implements ModInitializer {
         s_Config = ModConfig.get();
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
-
-        ClientTickEvents.END_CLIENT_TICK.register(WaystoneManager::waystoneTick);
-
         ClientLifecycleEvents.CLIENT_STOPPING.register(this::onClientStop);
 
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -59,6 +58,13 @@ public class Asmputils implements ModInitializer {
             Utils.debug("Failed to start LocalWaypointServer: " + e.getMessage());
             waypointServer.stop();
         }
+
+        if(s_Config.enableShopModule) {
+            modules.add(new ShopModule());
+        }
+        if(s_Config.enableWaystoneModule) {
+            modules.add(new WaystoneModule());
+        }
     }
 
     public void onClientTick(MinecraftClient client) {
@@ -77,35 +83,39 @@ public class Asmputils implements ModInitializer {
 
         if(s_Config.ticksBetweenSends < 400) s_Config.ticksBetweenSends = 600;
 
+        for(IModule module : modules) {
+            module.onTick();
+        }
+
         ChunkPos currentChunkPosition = new ChunkPos(s_Player.getBlockPos());
 
         if(lastChunkPosition == null || !lastChunkPosition.equals(currentChunkPosition)) {
-            onEnterNewChunk(currentChunkPosition);
+
+            for(IModule module : modules) {
+                module.onChunkEnter(currentChunkPosition);
+            }
             lastChunkPosition = currentChunkPosition;
         }
 
-        //We should send our data because our timer is done
-        if(tickInServer % s_Config.ticksBetweenSends == 0) {
-            if(!VersionManagement.s_UsingLatestVersion) {Utils.debug("Discarding- not up-to date!"); tickInServer++; return;}
+        if(s_TicksInASMPServer % s_Config.ticksBetweenSends == 0) {
+            if(!VersionManagement.s_UsingLatestVersion) {Utils.debug("Discarding- not up-to date!"); s_TicksInASMPServer++; return;}
             Utils.debug("Attempting to send cached shops");
 
+            //Gotta refactor sender to be able to send shops and waystones separately
             Sender.sendCachedData();
             ShopDataManager.s_CachedShops.clear();
-            WaystoneManager.s_CachedWaystones.clear();
+            WaystoneModule.s_CachedWaystones.clear();
         }
 
-        tickInServer++;
-    }
-
-    private void onEnterNewChunk(ChunkPos currentChunk) {
-        Utils.debug("Entered new chunk");
-
-        if(s_Config.trackShops) {
-            ShopManager.handleShopDetection(currentChunk);
-        }
+        s_TicksInASMPServer++;
     }
 
     private void onClientStop(MinecraftClient client) {
+
+        for(IModule module : modules) {
+            module.onStop();
+        }
+
         waypointServer.stop();
     }
 }

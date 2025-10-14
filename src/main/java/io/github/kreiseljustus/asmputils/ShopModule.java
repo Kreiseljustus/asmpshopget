@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ShopManager{
+public class ShopModule implements IModule{
 
     static List<ShopDataHolder> foundShops = new ArrayList<>();
 
@@ -113,5 +113,24 @@ public class ShopManager{
         }
 
         foundShops.clear();
+    }
+
+    @Override
+    public void onTick() {
+        if(Asmputils.s_TicksInASMPServer % Asmputils.s_Config.ticksBetweenSends == 0) {
+
+        }
+    }
+
+    @Override
+    public void onChunkEnter(ChunkPos chunkPos) {
+        if(Asmputils.s_Config.trackShops) {
+            handleShopDetection(chunkPos);
+        }
+    }
+
+    @Override
+    public void onStop() {
+
     }
 }

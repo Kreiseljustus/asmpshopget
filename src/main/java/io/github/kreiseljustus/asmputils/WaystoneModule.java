@@ -1,5 +1,6 @@
 package io.github.kreiseljustus.asmputils;
 
+import io.github.kreiseljustus.asmputils.core.IModule;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.ItemStack;
@@ -7,10 +8,11 @@ import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 
 import java.util.LinkedList;
 
-public class WaystoneManager {
+public class WaystoneModule implements IModule {
 
     public static LinkedList<WaystoneDataHolder> s_CachedWaystones = new LinkedList<>();
     private static LinkedList<String> checkedInventories = new LinkedList<>();
@@ -70,5 +72,20 @@ public class WaystoneManager {
                 checkedInventories.add(screen.getTitle().getString());
             }
         }
+    }
+
+    @Override
+    public void onTick() {
+        waystoneTick(MinecraftClient.getInstance());
+    }
+
+    @Override
+    public void onChunkEnter(ChunkPos chunkPos) {
+
+    }
+
+    @Override
+    public void onStop() {
+
     }
 }
