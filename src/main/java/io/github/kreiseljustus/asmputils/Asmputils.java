@@ -1,6 +1,5 @@
-package io.github.kreiseljustus.asmpshopget;
+package io.github.kreiseljustus.asmputils;
 
-import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.block.BlockState;
@@ -16,14 +15,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Asmpshopget implements ModInitializer {
+public class Asmputils implements ModInitializer {
 
     static final String VERSION = "1.2.0";
     static final String VERSION_URL = "https://kreiseljustus.com/asmp_version.txt";

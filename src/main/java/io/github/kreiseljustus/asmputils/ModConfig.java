@@ -1,4 +1,4 @@
-package io.github.kreiseljustus.asmpshopget;
+package io.github.kreiseljustus.asmputils;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;

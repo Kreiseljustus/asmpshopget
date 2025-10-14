@@ -1,4 +1,4 @@
-package io.github.kreiseljustus.asmpshopget;
+package io.github.kreiseljustus.asmputils;
 
 import java.io.IOException;
 import java.io.InputStream;

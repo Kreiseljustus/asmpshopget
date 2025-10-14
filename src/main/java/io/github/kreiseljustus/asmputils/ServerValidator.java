@@ -1,4 +1,4 @@
-package io.github.kreiseljustus.asmpshopget;
+package io.github.kreiseljustus.asmputils;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -59,8 +59,8 @@ public class ServerValidator {
     }
 
     public static void getServerData() {
-        String shopJson = downloadUrl(Asmpshopget.s_Config.shopRoute);
-        String waystoneJson = downloadUrl(Asmpshopget.s_Config.waystoneRoute);
+        String shopJson = downloadUrl(Asmputils.s_Config.shopRoute);
+        String waystoneJson = downloadUrl(Asmputils.s_Config.waystoneRoute);
 
         Type shopListType = new TypeToken<List<ShopDataHolder>>() {}.getType();
         s_ServerShops = gson.fromJson(shopJson, shopListType);

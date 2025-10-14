@@ -1,20 +1,15 @@
-package io.github.kreiseljustus.asmpshopget;
+package io.github.kreiseljustus.asmputils;
 
 import com.google.gson.Gson;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.asynchttpclient.AsyncHttpClient;
-import org.asynchttpclient.DefaultAsyncHttpClientConfig;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class Sender {
     static Gson gson = new Gson();
@@ -49,7 +44,7 @@ public class Sender {
 
         String requestBody = String.format("{\"type\":\"shop\",\"data\":%s}", dataJson);
 
-        HttpPost post = new HttpPost(Asmpshopget.s_Config.deleteRoute);
+        HttpPost post = new HttpPost(Asmputils.s_Config.deleteRoute);
         new Thread(() -> {
             try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
                 StringEntity postString = new StringEntity(requestBody, ContentType.APPLICATION_JSON);
@@ -74,7 +69,7 @@ public class Sender {
             return;
         }
 
-        ModConfig config = Asmpshopget.s_Config;
+        ModConfig config = Asmputils.s_Config;
         if(config.postUrl == null || config.postUrl.isEmpty()) return;
 
         HttpPost post = new HttpPost(config.postUrl);

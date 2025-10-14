@@ -1,21 +1,21 @@
 {
   "schemaVersion": 1,
-  "id": "asmpshopget",
+  "id": "asmputils",
   "version": "${version}",
 
-  "name": "asmpshopget",
+  "name": "ASMP Utils",
   "description": "POGGIES",
   "authors": ["Crisel", "apne", "fezfan"],
   "contact": {"homepage":  "https://kreiseljustus.com", "sources":  "https://github.com/Kreiseljustus/asmpshopget"},
 
   "license": "CC0-1.0",
-  "icon": "assets/asmpshopget/icon.png",
+  "icon": "assets/asmputils/icon.png",
 
   "environment": "client",
   "entrypoints": {
-    "main": ["io.github.kreiseljustus.asmpshopget.Asmpshopget"],
+    "main": ["io.github.kreiseljustus.asmputils.Asmputils"],
     "modmenu": [
-      "io.github.kreiseljustus.asmpshopget.ModMenu"
+      "io.github.kreiseljustus.asmputils.ModMenu"
     ]
   },
 

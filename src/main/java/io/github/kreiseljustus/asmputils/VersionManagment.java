@@ -1,15 +1,11 @@
-package io.github.kreiseljustus.asmpshopget;
+package io.github.kreiseljustus.asmputils;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,7 +25,7 @@ public class VersionManagment {
 
     public static boolean isOldVersion() {
         try {
-            String versionString = fetchVersionFromUrl(Asmpshopget.VERSION_URL);
+            String versionString = fetchVersionFromUrl(Asmputils.VERSION_URL);
 
             if(versionString == null || versionString.isEmpty()) {
                 Utils.debug("Failed to retrieve latest version. Please report this");
@@ -37,7 +33,7 @@ public class VersionManagment {
             }
 
             int[] latestVersionParts = parseVersion(versionString);
-            int[] currentParts = parseVersion(Asmpshopget.VERSION);
+            int[] currentParts = parseVersion(Asmputils.VERSION);
 
             for(int i = 0; i < latestVersionParts.length; i++) {
                 if(latestVersionParts[i] > currentParts[i]) {
