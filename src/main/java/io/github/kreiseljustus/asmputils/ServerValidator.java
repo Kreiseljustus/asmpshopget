@@ -2,6 +2,7 @@ package io.github.kreiseljustus.asmputils;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -36,6 +37,29 @@ public class ServerValidator {
             }
         }
         return result;
+    }
+
+    public static @NotNull Thread getFetcherThread() {
+        Thread fetcherThread = new Thread(() -> {
+            while (true) {
+                try {
+                    if(!ModConfig.get().enable) Thread.sleep(Asmputils.s_Config.fetcherThreadInterval);
+                    ServerValidator.getServerData();
+                } catch (Exception e) {
+                    Utils.debug("This will crash minecraft");
+                }
+
+                try {
+                    Thread.sleep(Asmputils.s_Config.fetcherThreadInterval);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        });
+
+        fetcherThread.setDaemon(true);
+        return fetcherThread;
     }
 
     public static void getServerData() {

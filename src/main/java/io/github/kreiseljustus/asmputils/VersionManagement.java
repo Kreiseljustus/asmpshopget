@@ -10,7 +10,10 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class VersionManagment {
+//This has to be reworked to treat the shop sending as an extra "module" and only disable that
+//when breaking changes happened
+
+public class VersionManagement {
     public static boolean s_UsingLatestVersion;
     private static boolean s_WarningGiven = false;
 
@@ -25,7 +28,7 @@ public class VersionManagment {
 
     public static boolean isOldVersion() {
         try {
-            String versionString = fetchVersionFromUrl(Asmputils.VERSION_URL);
+            String versionString = fetchVersionFromUrl(Constants.VERSION_URL);
 
             if(versionString == null || versionString.isEmpty()) {
                 Utils.debug("Failed to retrieve latest version. Please report this");
@@ -33,7 +36,7 @@ public class VersionManagment {
             }
 
             int[] latestVersionParts = parseVersion(versionString);
-            int[] currentParts = parseVersion(Asmputils.VERSION);
+            int[] currentParts = parseVersion(Constants.VERSION);
 
             for(int i = 0; i < latestVersionParts.length; i++) {
                 if(latestVersionParts[i] > currentParts[i]) {
