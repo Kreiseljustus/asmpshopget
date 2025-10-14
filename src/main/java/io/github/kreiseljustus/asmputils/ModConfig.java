@@ -35,8 +35,6 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("Dev")
     public String shopRoute = "https://kreiseljustus.com/asmp/api/shops";
     @ConfigEntry.Category("Dev")
-    public String waystoneRoute = "https://kreiseljustus.com/asmp/api/shops";
-    @ConfigEntry.Category("Dev")
     public String deleteRoute = "https://kreiseljustus.com/asmp/api/delete";
 
 

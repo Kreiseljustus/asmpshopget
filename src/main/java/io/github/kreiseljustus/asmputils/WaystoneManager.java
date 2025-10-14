@@ -50,8 +50,6 @@ public class WaystoneManager {
 
         if(client.currentScreen instanceof HandledScreen<?> screen) {
 
-            Utils.debug("Theres a screen open");
-
             if(checkedInventories.contains(screen.getTitle().toString())) return;
 
             ScreenHandler handler = screen.getScreenHandler();

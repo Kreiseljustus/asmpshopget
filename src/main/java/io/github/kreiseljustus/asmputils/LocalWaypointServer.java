@@ -71,7 +71,7 @@ public class LocalWaypointServer {
             }
             exchange.close();
         });
-        
+
         new Thread(() -> server.start()).start();
     }
 

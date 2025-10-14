@@ -75,7 +75,7 @@ public class Sender {
         HttpPost post = new HttpPost(config.postUrl);
         new Thread(() -> {
             try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
-                DataUploadPacket packet = new DataUploadPacket(shops,waystones);
+                ShopWaystoneUploadPacket packet = new ShopWaystoneUploadPacket(shops,waystones);
                 StringEntity postString = new StringEntity(gson.toJson(packet), ContentType.APPLICATION_JSON);
                 Utils.debug(gson.toJson(packet));
                 post.setEntity(postString);

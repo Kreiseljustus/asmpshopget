@@ -51,7 +51,7 @@ public class ShopDataHolder {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(Owner, position, price,item,action,amount,dimension);
+        int result = Objects.hash(Owner, Arrays.hashCode(position), price,item,action,amount,dimension);
         result = 31 * result + Arrays.hashCode(position);
         return result;
     }
