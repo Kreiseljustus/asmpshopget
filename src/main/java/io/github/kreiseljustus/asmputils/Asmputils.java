@@ -109,14 +109,6 @@ public class Asmputils implements ModInitializer {
         if(!checkedVersionOnStartup) {
             VersionManagment.checkAndWarnVersion(client.player);
 
-            if(s_Config.sendUsername) {
-                Utils.debug(("{\"username\":\"" + client.player.getName() + "\"}"));
-                //client.player.sendMessage(Text.of("Your username will be sent to the server and stored to see how many people have the mod! You can opt-out in the config. This data is not used for ANYTHING else"), false);
-                new Thread(() -> {
-                    Sender.sendPostRequest("{\"username\":\"" + client.player.getName() + "\"}", "https://kreiseljustus.com/asmp/api/username");
-                }).start();
-                }
-
             checkedVersionOnStartup = true;
         }
 

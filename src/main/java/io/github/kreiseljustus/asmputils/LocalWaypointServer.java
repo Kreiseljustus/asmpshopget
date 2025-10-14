@@ -18,18 +18,7 @@ public class LocalWaypointServer {
     public void start() throws IOException {
         server = HttpServer.create(new InetSocketAddress(52629), 0);
 
-        // Root endpoint for server status
-        server.createContext("/", exchange -> {
-            String response = "LocalWaypointServer running";
-            exchange.sendResponseHeaders(200, response.length());
-            exchange.getResponseBody().write(response.getBytes());
-            exchange.close();
-        });
-
-        // Waypoint endpoint for receiving POST requests
         server.createContext("/waypoint", exchange -> {
-            // CORS headers for browser requests
-
             String origin = exchange.getRequestHeaders().getFirst("Origin");
             if (origin != null) {
                 if (origin.equals("https://kreiseljustus.com") || origin.startsWith("http://localhost")) {
@@ -51,7 +40,7 @@ public class LocalWaypointServer {
                 try (InputStream is = exchange.getRequestBody()) {
                     String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
                     JsonObject json = JsonParser.parseString(body).getAsJsonObject();
-                    // Parse waypoint data
+
                     String name = json.get("name").getAsString();
                     int x = json.get("x").getAsInt();
                     int y = json.get("y").getAsInt();
@@ -68,7 +57,7 @@ public class LocalWaypointServer {
                         String chatMsg = "xaero-waypoint:" + name + ":" + initial + ":" + x + ":" + y + ":" + z + ":6:false:0:Internal-" + dimension;
                         client.player.sendMessage(Text.of(chatMsg), false);
                     }
-                    // Respond to sender
+
                     String response = "Waypoint received";
                     exchange.sendResponseHeaders(200, response.length());
                     exchange.getResponseBody().write(response.getBytes());
@@ -82,8 +71,7 @@ public class LocalWaypointServer {
             }
             exchange.close();
         });
-
-        // Start the server in a new thread
+        
         new Thread(() -> server.start()).start();
     }
 

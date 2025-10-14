@@ -26,8 +26,6 @@ public class ModConfig implements ConfigData {
     public int fetcherThreadInterval = 15 * 60 * 1000;
 
     @ConfigEntry.Category("General")
-    public boolean sendUsername = true;
-    @ConfigEntry.Category("General")
     public boolean enableWaypointFeature = true;
 
     @ConfigEntry.Category("Dev")
