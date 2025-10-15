@@ -84,11 +84,14 @@ public class ShopModule implements IModule{
                 Utils.debug(e.getMessage());
             }
 
-            int dimension = switch (world.getDimensionEntry().toString()) {
+            int dimension = switch (world.getDimensionEntry().getIdAsString()) {
                 case "minecraft:the_nether" -> 1;
                 case "minecraft:the_end" -> 2;
                 default -> 0;
             };
+
+            Utils.debug(world.getDimensionEntry().getIdAsString());
+            Utils.debug(String.valueOf(dimension));
 
             if(!price.contains(" each")) continue;
 
