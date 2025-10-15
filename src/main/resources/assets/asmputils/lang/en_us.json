@@ -10,6 +10,17 @@
   "text.autoconfig.asmpshopget.option.sendUsername": "Send Username to track mod installs",
   "text.autoconfig.asmpshopget.option.enableWaypointFeature": "Enable waypoint feature",
 
+  "text.autoconfig.asmpshopget.category.Waypoints": "Waypoints",
+  "text.autoconfig.asmpshopget.option.waypointColor": "Waypoint color",
+  "text.autoconfig.asmpshopget.option.waypointColor.@Tooltip": "Select the default color for waypoints created by the ASMP Utils mod.",
+  "text.autoconfig.asmpshopget.option.waypointType": "Waypoint type",
+  "text.autoconfig.asmpshopget.option.waypointType.@Tooltip": "Select the default type for waypoints created by the ASMP Utils mod. (Normal = Stays until removed, Destination = Deleted when reached).",
+  "text.autoconfig.asmpshopget.option.waypointTemporary": "Create waypoints as temporary",
+  "text.autoconfig.asmpshopget.option.waypointTemporary.@Tooltip": "If enabled, waypoints will be created as temporary (deleted upon disconnecting).",
+  "text.autoconfig.asmpshopget.option.waypointInitial": "Waypoint initials",
+  "text.autoconfig.asmpshopget.option.waypointInitial.@Tooltip": "The characters to use as the waypoint initials. Leave empty to automatically use the first character of the waypoint name.",
+  
+
   "text.autoconfig.asmpshopget.category.General": "General",
   "text.autoconfig.asmpshopget.category.Dev": "Developer",
   "text.autoconfig.asmpshopget.category.Tracking": "Tracking",
