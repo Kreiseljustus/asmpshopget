@@ -67,7 +67,14 @@ public class WaystoneModule implements IModule {
                 Utils.debug("Waystone detected! Owner: " + owner + ", Name: " + name + ", Pos: " + pos);
 
                 int[] position = {pos.getX(), pos.getY(), pos.getZ()};
-                addWaystone(new WaystoneDataHolder(owner,name, position));
+
+                int dimension = switch (Asmputils.s_Player.getWorld().getDimensionEntry().getIdAsString()) {
+                    case "minecraft:the_nether" -> 1;
+                    case "minecraft:the_end" -> 2;
+                    default -> 0;
+                };
+
+                addWaystone(new WaystoneDataHolder(owner,name, position, dimension));
 
                 checkedInventories.add(screen.getTitle().getString());
             }
