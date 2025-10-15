@@ -1,16 +1,27 @@
 package io.github.kreiseljustus.asmputils;
 
 import io.github.kreiseljustus.asmputils.core.IModule;
+import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ConfirmLinkScreen;
+import net.minecraft.client.gui.screen.MessageScreen;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.ChunkPos;
 
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-public class Asmputils implements ModInitializer {
+public class Asmputils implements ClientModInitializer {
     public static ModConfig s_Config;
     public static PlayerEntity s_Player;
 
@@ -25,8 +36,14 @@ public class Asmputils implements ModInitializer {
 
     List<IModule> modules = new ArrayList<>();
 
+    private static final ScheduledExecutorService tickDelay = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread t = new Thread(r, "mod-delay");
+        t.setDaemon(true);
+        return t;
+    });
+
     @Override
-    public void onInitialize() {
+    public void onInitializeClient() {
         ModConfig.register();
 
         s_Config = ModConfig.get();
@@ -65,6 +82,28 @@ public class Asmputils implements ModInitializer {
         if(s_Config.enableWaystoneModule) {
             modules.add(new WaystoneModule());
         }
+
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            dispatcher.register(ClientCommandManager.literal("shopsite")
+                    .executes(context -> {
+                        // delay ~1 tick (1 tick = 50 ms at 20 TPS)
+                        tickDelay.schedule(() -> {
+                            MinecraftClient client = MinecraftClient.getInstance();
+                            client.execute(() -> {
+                                client.setScreen(new ConfirmLinkScreen(confirmed -> {
+                                    if (confirmed) {
+                                        Util.getOperatingSystem().open("https://kreiseljustus.com");
+                                    } else {
+                                        Utils.debug("User cancelled");
+                                    }
+                                    client.setScreen(null);
+                                }, "https://kreiseljustus.com", true));
+                            });
+                        }, 50, TimeUnit.MILLISECONDS);
+
+                        return 1;
+                    }));
+        });
     }
 
     public void onClientTick(MinecraftClient client) {
