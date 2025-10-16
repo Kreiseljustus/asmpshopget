@@ -27,8 +27,34 @@ public class ModConfig implements ConfigData {
 
     @ConfigEntry.Category("General")
     public boolean sendUsername = true;
-    @ConfigEntry.Category("General")
+
+    public static enum WaypointColorOption {
+        BLACK, DARK_BLUE, DARK_GREEN, DARK_AQUA, DARK_RED, DARK_PURPLE, GOLD, GRAY, DARK_GRAY, BLUE, GREEN, AQUA, RED, PURPLE, YELLOW, WHITE
+    }
+
+    public static enum WaypointTypeOption {
+        NORMAL, DESTINATION
+    }
+
+    @ConfigEntry.Category("Waypoints")
+    @ConfigEntry.Gui.Tooltip
     public boolean enableWaypointFeature = true;
+
+    @ConfigEntry.Category("Waypoints")
+    @ConfigEntry.Gui.Tooltip
+    public WaypointColorOption waypointColor = WaypointColorOption.GOLD;
+    
+    @ConfigEntry.Category("Waypoints")
+    @ConfigEntry.Gui.Tooltip
+    public String waypointInitial = "💰";
+
+    @ConfigEntry.Category("Waypoints")
+    @ConfigEntry.Gui.Tooltip
+    public WaypointTypeOption waypointType = WaypointTypeOption.DESTINATION;
+
+    @ConfigEntry.Category("Waypoints")
+    @ConfigEntry.Gui.Tooltip
+    public boolean waypointTemporary = true;
 
     @ConfigEntry.Category("Dev")
     public boolean enableDebugMode = false;
