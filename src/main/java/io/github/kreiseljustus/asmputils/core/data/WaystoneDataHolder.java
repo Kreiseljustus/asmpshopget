@@ -1,4 +1,4 @@
-package io.github.kreiseljustus.asmputils;
+package io.github.kreiseljustus.asmputils.core.data;
 
 import org.jetbrains.annotations.NotNull;
 

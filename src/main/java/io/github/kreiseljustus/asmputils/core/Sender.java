@@ -1,6 +1,12 @@
-package io.github.kreiseljustus.asmputils;
+package io.github.kreiseljustus.asmputils.core;
 
 import com.google.gson.Gson;
+import io.github.kreiseljustus.asmputils.*;
+import io.github.kreiseljustus.asmputils.core.data.ShopDataHolder;
+import io.github.kreiseljustus.asmputils.core.data.ShopDataManager;
+import io.github.kreiseljustus.asmputils.core.data.ShopWaystoneUploadPacket;
+import io.github.kreiseljustus.asmputils.core.data.WaystoneDataHolder;
+import io.github.kreiseljustus.asmputils.core.modules.WaystoneModule;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;

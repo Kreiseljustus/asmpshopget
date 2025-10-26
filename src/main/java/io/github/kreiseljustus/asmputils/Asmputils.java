@@ -1,22 +1,23 @@
 package io.github.kreiseljustus.asmputils;
 
-import io.github.kreiseljustus.asmputils.core.IModule;
+import io.github.kreiseljustus.asmputils.core.*;
+import io.github.kreiseljustus.asmputils.core.data.ShopDataManager;
+import io.github.kreiseljustus.asmputils.core.modules.shop.ServerValidator;
+import io.github.kreiseljustus.asmputils.core.modules.shop.ShopModule;
+import io.github.kreiseljustus.asmputils.core.modules.WaystoneModule;
+import io.github.kreiseljustus.asmputils.core.modules.waypoints.WaypointModule;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
-import net.minecraft.client.gui.screen.MessageScreen;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.ChunkPos;
 
 import java.util.*;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -25,10 +26,8 @@ public class Asmputils implements ClientModInitializer {
     public static ModConfig s_Config;
     public static PlayerEntity s_Player;
 
-    private static LocalWaypointServer waypointServer = null;
-
     Timer timer = new Timer();
-    static int s_TicksInASMPServer = 0;
+    public static int s_TicksInASMPServer = 0;
 
     boolean checkedVersionOnStartup = false;
 
@@ -36,7 +35,7 @@ public class Asmputils implements ClientModInitializer {
 
     List<IModule> modules = new ArrayList<>();
 
-    private static final ScheduledExecutorService tickDelay = Executors.newSingleThreadScheduledExecutor(r -> {
+    public static final ScheduledExecutorService tickDelay = Executors.newSingleThreadScheduledExecutor(r -> {
         Thread t = new Thread(r, "mod-delay");
         t.setDaemon(true);
         return t;
@@ -66,44 +65,19 @@ public class Asmputils implements ClientModInitializer {
         Thread fetcherThread = ServerValidator.getFetcherThread();
         fetcherThread.start();
 
-        try {
-            if(s_Config.enableWaypointFeature) {
-                waypointServer =  new LocalWaypointServer();
-                waypointServer.start();
-            }
-        } catch (Exception e) {
-            Utils.debug("Failed to start LocalWaypointServer: " + e.getMessage());
-            waypointServer.stop();
-        }
-
         if(s_Config.enableShopModule) {
             modules.add(new ShopModule());
         }
         if(s_Config.enableWaystoneModule) {
             modules.add(new WaystoneModule());
         }
+        if(s_Config.enableWaypointFeature) {
+            modules.add(new WaypointModule());
+        }
 
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            dispatcher.register(ClientCommandManager.literal("shopsite")
-                    .executes(context -> {
-                        // delay ~1 tick (1 tick = 50 ms at 20 TPS)
-                        tickDelay.schedule(() -> {
-                            MinecraftClient client = MinecraftClient.getInstance();
-                            client.execute(() -> {
-                                client.setScreen(new ConfirmLinkScreen(confirmed -> {
-                                    if (confirmed) {
-                                        Util.getOperatingSystem().open("https://kreiseljustus.com");
-                                    } else {
-                                        Utils.debug("User cancelled");
-                                    }
-                                    client.setScreen(null);
-                                }, "https://kreiseljustus.com", true));
-                            });
-                        }, 50, TimeUnit.MILLISECONDS);
-
-                        return 1;
-                    }));
-        });
+        for(IModule module : modules) {
+            module.onInitClient();
+        }
     }
 
     public void onClientTick(MinecraftClient client) {
@@ -154,7 +128,5 @@ public class Asmputils implements ClientModInitializer {
         for(IModule module : modules) {
             module.onStop();
         }
-
-        waypointServer.stop();
     }
 }

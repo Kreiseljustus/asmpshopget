@@ -1,6 +1,9 @@
-package io.github.kreiseljustus.asmputils;
+package io.github.kreiseljustus.asmputils.core.modules;
 
+import io.github.kreiseljustus.asmputils.Asmputils;
+import io.github.kreiseljustus.asmputils.core.Utils;
 import io.github.kreiseljustus.asmputils.core.IModule;
+import io.github.kreiseljustus.asmputils.core.data.WaystoneDataHolder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.ItemStack;
@@ -79,6 +82,11 @@ public class WaystoneModule implements IModule {
                 checkedInventories.add(screen.getTitle().getString());
             }
         }
+    }
+
+    @Override
+    public void onInitClient() {
+
     }
 
     @Override

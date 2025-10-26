@@ -1,4 +1,4 @@
-package io.github.kreiseljustus.asmputils;
+package io.github.kreiseljustus.asmputils.core.modules.waypoints;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpServer;
 
+import io.github.kreiseljustus.asmputils.core.Utils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 

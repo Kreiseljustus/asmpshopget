@@ -1,5 +1,6 @@
-package io.github.kreiseljustus.asmputils;
+package io.github.kreiseljustus.asmputils.core;
 
+import io.github.kreiseljustus.asmputils.Constants;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 

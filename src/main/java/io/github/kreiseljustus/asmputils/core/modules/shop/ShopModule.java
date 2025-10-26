@@ -1,6 +1,12 @@
-package io.github.kreiseljustus.asmputils;
+package io.github.kreiseljustus.asmputils.core.modules.shop;
 
+import io.github.kreiseljustus.asmputils.*;
 import io.github.kreiseljustus.asmputils.core.IModule;
+import io.github.kreiseljustus.asmputils.core.Sender;
+import io.github.kreiseljustus.asmputils.core.Utils;
+import io.github.kreiseljustus.asmputils.core.data.ShopDataHolder;
+import io.github.kreiseljustus.asmputils.core.data.ShopDataManager;
+import io.github.kreiseljustus.asmputils.core.data.ShopException;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SignBlock;
 import net.minecraft.block.WallSignBlock;
@@ -116,6 +122,11 @@ public class ShopModule implements IModule{
         }
 
         foundShops.clear();
+    }
+
+    @Override
+    public void onInitClient() {
+
     }
 
     @Override

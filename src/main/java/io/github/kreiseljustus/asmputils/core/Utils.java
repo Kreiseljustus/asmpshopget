@@ -1,5 +1,6 @@
-package io.github.kreiseljustus.asmputils;
+package io.github.kreiseljustus.asmputils.core;
 
+import io.github.kreiseljustus.asmputils.Asmputils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.text.Text;
