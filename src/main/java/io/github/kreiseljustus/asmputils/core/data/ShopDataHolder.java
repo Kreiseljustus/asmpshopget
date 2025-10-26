@@ -1,15 +1,9 @@
-package io.github.kreiseljustus.asmputils;
+package io.github.kreiseljustus.asmputils.core.data;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Objects;
-
-class ShopException extends Exception {
-    ShopException() {
-        super("Failed to create shop data");
-    }
-}
 
 public class ShopDataHolder {
     public String Owner;
@@ -51,7 +45,7 @@ public class ShopDataHolder {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(Owner, position, price,item,action,amount,dimension);
+        int result = Objects.hash(Owner, Arrays.hashCode(position), price,item,action,amount,dimension);
         result = 31 * result + Arrays.hashCode(position);
         return result;
     }

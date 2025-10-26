@@ -13,7 +13,7 @@
 
   "environment": "client",
   "entrypoints": {
-    "main": ["io.github.kreiseljustus.asmputils.Asmputils"],
+    "client": ["io.github.kreiseljustus.asmputils.Asmputils"],
     "modmenu": [
       "io.github.kreiseljustus.asmputils.ModMenu"
     ]

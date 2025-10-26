@@ -25,9 +25,6 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("Dev")
     public int fetcherThreadInterval = 15 * 60 * 1000;
 
-    @ConfigEntry.Category("General")
-    public boolean sendUsername = true;
-
     public static enum WaypointColorOption {
         BLACK, DARK_BLUE, DARK_GREEN, DARK_AQUA, DARK_RED, DARK_PURPLE, GOLD, GRAY, DARK_GRAY, BLUE, GREEN, AQUA, RED, PURPLE, YELLOW, WHITE
     }
@@ -36,14 +33,25 @@ public class ModConfig implements ConfigData {
         NORMAL, DESTINATION
     }
 
-    @ConfigEntry.Category("Waypoints")
+    @ConfigEntry.Category("Modules")
     @ConfigEntry.Gui.Tooltip
-    public boolean enableWaypointFeature = true;
+    public boolean enableShopModule = true;
+    @ConfigEntry.Category("Modules")
+    @ConfigEntry.Gui.Tooltip
+    public boolean enableWaystoneModule = true;
+
+    @ConfigEntry.Category("Modules")
+    @ConfigEntry.Gui.Tooltip
+    public boolean enableCommandsModule = true;
+
+    @ConfigEntry.Category("Modules")
+    @ConfigEntry.Gui.Tooltip
+    public boolean enableWaypointModule = true;
 
     @ConfigEntry.Category("Waypoints")
     @ConfigEntry.Gui.Tooltip
     public WaypointColorOption waypointColor = WaypointColorOption.GOLD;
-    
+
     @ConfigEntry.Category("Waypoints")
     @ConfigEntry.Gui.Tooltip
     public String waypointInitial = "💰";
@@ -62,8 +70,6 @@ public class ModConfig implements ConfigData {
     public boolean allowOnAllServers = false;
     @ConfigEntry.Category("Dev")
     public String shopRoute = "https://kreiseljustus.com/asmp/api/shops";
-    @ConfigEntry.Category("Dev")
-    public String waystoneRoute = "https://kreiseljustus.com/asmp/api/shops";
     @ConfigEntry.Category("Dev")
     public String deleteRoute = "https://kreiseljustus.com/asmp/api/delete";
 

@@ -1,5 +1,9 @@
-package io.github.kreiseljustus.asmputils;
+package io.github.kreiseljustus.asmputils.core.modules;
 
+import io.github.kreiseljustus.asmputils.Asmputils;
+import io.github.kreiseljustus.asmputils.core.Utils;
+import io.github.kreiseljustus.asmputils.core.IModule;
+import io.github.kreiseljustus.asmputils.core.data.WaystoneDataHolder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.ItemStack;
@@ -7,10 +11,11 @@ import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 
 import java.util.LinkedList;
 
-public class WaystoneManager {
+public class WaystoneModule implements IModule {
 
     public static LinkedList<WaystoneDataHolder> s_CachedWaystones = new LinkedList<>();
     private static LinkedList<String> checkedInventories = new LinkedList<>();
@@ -50,8 +55,6 @@ public class WaystoneManager {
 
         if(client.currentScreen instanceof HandledScreen<?> screen) {
 
-            Utils.debug("Theres a screen open");
-
             if(checkedInventories.contains(screen.getTitle().toString())) return;
 
             ScreenHandler handler = screen.getScreenHandler();
@@ -67,10 +70,37 @@ public class WaystoneManager {
                 Utils.debug("Waystone detected! Owner: " + owner + ", Name: " + name + ", Pos: " + pos);
 
                 int[] position = {pos.getX(), pos.getY(), pos.getZ()};
-                addWaystone(new WaystoneDataHolder(owner,name, position));
+
+                int dimension = switch (Asmputils.s_Player.getWorld().getDimensionEntry().getIdAsString()) {
+                    case "minecraft:the_nether" -> 1;
+                    case "minecraft:the_end" -> 2;
+                    default -> 0;
+                };
+
+                addWaystone(new WaystoneDataHolder(owner,name, position, dimension));
 
                 checkedInventories.add(screen.getTitle().getString());
             }
         }
+    }
+
+    @Override
+    public void onInitClient() {
+
+    }
+
+    @Override
+    public void onTick() {
+        waystoneTick(MinecraftClient.getInstance());
+    }
+
+    @Override
+    public void onChunkEnter(ChunkPos chunkPos) {
+
+    }
+
+    @Override
+    public void onStop() {
+
     }
 }

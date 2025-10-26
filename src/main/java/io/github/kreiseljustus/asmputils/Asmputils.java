@@ -1,248 +1,146 @@
 package io.github.kreiseljustus.asmputils;
 
-import net.fabricmc.api.ModInitializer;
+import com.nimbusds.common.contenttype.ContentType;
+import io.github.kreiseljustus.asmputils.core.*;
+import io.github.kreiseljustus.asmputils.core.data.ShopDataManager;
+import io.github.kreiseljustus.asmputils.core.modules.commands.CommandsModule;
+import io.github.kreiseljustus.asmputils.core.modules.shop.ServerValidator;
+import io.github.kreiseljustus.asmputils.core.modules.shop.ShopModule;
+import io.github.kreiseljustus.asmputils.core.modules.WaystoneModule;
+import io.github.kreiseljustus.asmputils.core.modules.waypoints.WaypointModule;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SignBlock;
-import net.minecraft.block.WallSignBlock;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.SignBlockEntity;
-import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Parameter;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
-public class Asmputils implements ModInitializer {
-
-    static final String VERSION = "1.2.0";
-    static final String VERSION_URL = "https://kreiseljustus.com/asmp_version.txt";
-
+public class Asmputils implements ClientModInitializer {
     public static ModConfig s_Config;
     public static PlayerEntity s_Player;
 
     Timer timer = new Timer();
-
-    int tickInServer = 0;
+    public static int s_TicksInASMPServer = 0;
 
     boolean checkedVersionOnStartup = false;
 
-    boolean tempDisable = false;
-
     ChunkPos lastChunkPosition = null;
 
-    @Override
-    public void onInitialize() {
+    List<IModule> modules = new ArrayList<>();
 
+    public static final ScheduledExecutorService tickDelay = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread t = new Thread(r, "mod-delay");
+        t.setDaemon(true);
+        return t;
+    });
+
+    @Override
+    public void onInitializeClient() {
         ModConfig.register();
 
         s_Config = ModConfig.get();
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
-
-        ClientTickEvents.END_CLIENT_TICK.register(WaystoneManager::waystoneTick);
+        ClientLifecycleEvents.CLIENT_STOPPING.register(this::onClientStop);
 
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 MinecraftClient client = MinecraftClient.getInstance();
                 if (client == null || client.player == null) return;
-                if (!s_Config.enable || tempDisable) return;
+                if (!s_Config.enable) return;
                 if (!s_Config.allowOnAllServers && !Utils.onASMP()) return;
 
-                VersionManagment.checkAndWarnVersion(client.player);
+                VersionManagement.checkAndWarnVersion(client.player);
             }
         },0,300_000);
 
-        Thread fetcherThread = getThread();
+        Thread fetcherThread = ServerValidator.getFetcherThread();
         fetcherThread.start();
 
-        try {
-            if(s_Config.enableWaypointFeature) {
-                new LocalWaypointServer().start();
-            }
-        } catch (Exception e) {
-            Utils.debug("Failed to start LocalWaypointServer: " + e.getMessage());
+        //Cant disable modules while in game. Use reflection to check??
+
+        if(s_Config.enableShopModule) {
+            modules.add(new ShopModule());
+        }
+        if(s_Config.enableWaystoneModule) {
+            modules.add(new WaystoneModule());
+        }
+        if(s_Config.enableWaypointModule) {
+            modules.add(new WaypointModule());
+        }
+        if(s_Config.enableCommandsModule) {
+            modules.add(new CommandsModule());
+        }
+        for(IModule module : modules) {
+            module.onInitClient();
         }
     }
 
-    private static @NotNull Thread getThread() {
-        Thread fetcherThread = new Thread(() -> {
-            while (true) {
-                try {
-                    if(!ModConfig.get().enable) Thread.sleep(s_Config.fetcherThreadInterval);
-                    ServerValidator.getServerData();
-                } catch (Exception e) {
-                    Utils.debug("This will crash minecraft");
-                }
+    /*public boolean getModuleOn(Class<?> klasse) {
+        try {
+            String fieldName = "enable" + klasse.getSimpleName();
 
-                try {
-                    Thread.sleep(s_Config.fetcherThreadInterval);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-        });
+            var field = s_Config.getClass().getDeclaredField(fieldName);
 
-        fetcherThread.setDaemon(true);
-        return fetcherThread;
-    }
+            return field.getBoolean(s_Config);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }*/
 
     public void onClientTick(MinecraftClient client) {
         s_Config = ModConfig.get();
         if(!s_Config.enable) return;
-        if(tempDisable) return;
         if(client.player == null) return;
         if(!s_Config.allowOnAllServers && !Utils.onASMP()) return;
 
         s_Player = client.player;
 
         if(!checkedVersionOnStartup) {
-            VersionManagment.checkAndWarnVersion(client.player);
-
-            if(s_Config.sendUsername) {
-                Utils.debug(("{\"username\":\"" + client.player.getName() + "\"}"));
-                //client.player.sendMessage(Text.of("Your username will be sent to the server and stored to see how many people have the mod! You can opt-out in the config. This data is not used for ANYTHING else"), false);
-                new Thread(() -> {
-                    Sender.sendPostRequest("{\"username\":\"" + client.player.getName() + "\"}", "https://kreiseljustus.com/asmp/api/username");
-                }).start();
-                }
+            VersionManagement.checkAndWarnVersion(client.player);
 
             checkedVersionOnStartup = true;
         }
 
         if(s_Config.ticksBetweenSends < 400) s_Config.ticksBetweenSends = 600;
 
+        for(IModule module : modules) {
+            module.onTick();
+        }
+
         ChunkPos currentChunkPosition = new ChunkPos(s_Player.getBlockPos());
 
         if(lastChunkPosition == null || !lastChunkPosition.equals(currentChunkPosition)) {
-            onEnterNewChunk(currentChunkPosition);
+
+            for(IModule module : modules) {
+                module.onChunkEnter(currentChunkPosition);
+            }
             lastChunkPosition = currentChunkPosition;
         }
 
-        //We should send our data because our timer is done
-        if(tickInServer % s_Config.ticksBetweenSends == 0) {
-            if(!VersionManagment.s_UsingLatestVersion) {Utils.debug("Discarding- not up-to date!"); tickInServer++; return;}
+        if(s_TicksInASMPServer % s_Config.ticksBetweenSends == 0) {
+            if(!VersionManagement.s_UsingLatestVersion) {Utils.debug("Discarding- not up-to date!"); s_TicksInASMPServer++; return;}
             Utils.debug("Attempting to send cached shops");
 
+            //Gotta refactor sender to be able to send shops and waystones separately
             Sender.sendCachedData();
             ShopDataManager.s_CachedShops.clear();
-            WaystoneManager.s_CachedWaystones.clear();
+            WaystoneModule.s_CachedWaystones.clear();
         }
 
-        tickInServer++;
+        s_TicksInASMPServer++;
     }
 
-    public void onEnterNewChunk(ChunkPos currentChunk) {
-        Utils.debug("Entered new chunk");
+    private void onClientStop(MinecraftClient client) {
 
-        if(s_Config.trackShops) {
-            handleShopDetection(currentChunk);
-        }
-    }
-
-    private void handleShopDetection(ChunkPos currentChunk) {
-        World world = s_Player.getWorld();
-
-        Chunk chunk = world.getChunk(currentChunk.getStartPos());
-
-        List<ShopDataHolder> foundShops = new ArrayList<>();
-
-        for (BlockPos pos : chunk.getBlockEntityPositions()) {
-            BlockEntity entity = world.getBlockEntity(pos);
-            Utils.debug("Entity: " + entity.getType().getRegistryEntry());
-            Utils.debug("EntityPos: " + entity.getPos());
-
-            if (!(entity instanceof SignBlockEntity)) {
-                Utils.debug("No SignBlockEntity here");
-                continue;
-            }
-
-            SignBlockEntity sign = (SignBlockEntity) entity;
-            BlockState blockState = world.getBlockState(pos);
-
-            Utils.debug("Block at pos: " + pos + " is " + blockState.getBlock().getTranslationKey());
-
-            if (!(blockState.getBlock() instanceof SignBlock || blockState.getBlock() instanceof WallSignBlock)) {
-                Utils.debug("No SignBlock here");
-                continue;
-            }
-
-            SignText text = sign.getFrontText();
-
-            String[] lines = Arrays.stream(text.getMessages(false)).map(Text::getString).toArray(String[]::new);
-
-            if (lines.length != 4) continue;
-
-            String owner = lines[0];
-            if(owner.isEmpty()) continue;
-            String sellBuyOOS = lines[1];
-            if(sellBuyOOS.isEmpty()) continue;
-
-            if (!(sellBuyOOS.contains("Selling") || sellBuyOOS.contains("Buying") || sellBuyOOS.contains("Out of Stock"))) {
-                Utils.debug("not selling, buying, oos");
-                continue;
-            }
-
-            String item = lines[2];
-            if(item.isEmpty()) continue;
-            String price = lines[3];
-            if(price.isEmpty()) continue;
-
-            //Utils.debug(owner + " is " + sellBuyOOS + " " + item + " for " + price);
-
-            int[] position = {
-                    pos.getX(), pos.getY(), pos.getZ()
-            };
-
-            int action = 0;
-            if (sellBuyOOS.contains("Selling")) action = 1;
-            else if (sellBuyOOS.contains("Out of Stock")) action = 2;
-
-            Matcher matcher = Pattern.compile("(Selling|Buying)\\s(\\d+)").matcher(sellBuyOOS);
-
-            int amount = 0;
-            try {
-                amount = matcher.find() ? Integer.parseInt(matcher.group(2)) : 0;
-            } catch(Exception e) {
-                Utils.debug(e.getMessage());
-            }
-
-            int dimension = switch (world.getDimensionEntry().toString()) {
-                case "minecraft:the_nether" -> 1;
-                case "minecraft:the_end" -> 2;
-                default -> 0;
-            };
-
-            if(!price.contains(" each")) continue;
-
-            ShopDataHolder shop = null;
-            try {
-                shop = new ShopDataHolder(owner, position, Float.parseFloat(price.substring(1).replace(" each", "").replace(",", "")), item, action, amount, dimension);
-            } catch (ShopException e) {
-                throw new RuntimeException(e);
-            }
-
-            ShopDataManager.addShop(shop);
-            foundShops.add(shop);
-        }
-
-        List<ShopDataHolder> shops = ServerValidator.getExpectedShopsInChunk(chunk.getPos().x, chunk.getPos().z);
-
-        for(ShopDataHolder expectedShop : shops) {
-            if(foundShops.contains(expectedShop)) continue;
-
-            //Send update to server
-            Sender.sendDeleteRequest(expectedShop);
+        for(IModule module : modules) {
+            module.onStop();
         }
     }
 }
