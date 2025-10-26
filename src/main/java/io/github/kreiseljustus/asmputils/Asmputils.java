@@ -2,6 +2,7 @@ package io.github.kreiseljustus.asmputils;
 
 import io.github.kreiseljustus.asmputils.core.*;
 import io.github.kreiseljustus.asmputils.core.data.ShopDataManager;
+import io.github.kreiseljustus.asmputils.core.modules.commands.CommandsModule;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ServerValidator;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ShopModule;
 import io.github.kreiseljustus.asmputils.core.modules.WaystoneModule;
@@ -74,6 +75,9 @@ public class Asmputils implements ClientModInitializer {
         if(s_Config.enableWaypointFeature) {
             modules.add(new WaypointModule());
         }
+
+        //Need to add a config value after merge
+        modules.add(new CommandsModule());
 
         for(IModule module : modules) {
             module.onInitClient();
