@@ -33,8 +33,6 @@ public class ModConfig implements ConfigData {
         NORMAL, DESTINATION
     }
 
-    @ConfigEntry.Category("Waypoints")
-    @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Category("Modules")
     @ConfigEntry.Gui.Tooltip
     public boolean enableShopModule = true;
@@ -42,8 +40,13 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public boolean enableWaystoneModule = true;
 
-    @ConfigEntry.Category("General")
-    public boolean enableWaypointFeature = true;
+    @ConfigEntry.Category("Modules")
+    @ConfigEntry.Gui.Tooltip
+    public boolean enableCommandsModule = true;
+
+    @ConfigEntry.Category("Modules")
+    @ConfigEntry.Gui.Tooltip
+    public boolean enableWaypointModule = true;
 
     @ConfigEntry.Category("Waypoints")
     @ConfigEntry.Gui.Tooltip
@@ -67,8 +70,6 @@ public class ModConfig implements ConfigData {
     public boolean allowOnAllServers = false;
     @ConfigEntry.Category("Dev")
     public String shopRoute = "https://kreiseljustus.com/asmp/api/shops";
-    @ConfigEntry.Category("Dev")
-    public String waystoneRoute = "https://kreiseljustus.com/asmp/api/shops";
     @ConfigEntry.Category("Dev")
     public String deleteRoute = "https://kreiseljustus.com/asmp/api/delete";
 

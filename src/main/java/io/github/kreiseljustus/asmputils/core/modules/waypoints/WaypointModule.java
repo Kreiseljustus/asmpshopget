@@ -13,7 +13,7 @@ public class WaypointModule implements IModule {
     @Override
     public void onInitClient() {
         try {
-            if(s_Config.enableWaypointFeature) {
+            if(s_Config.enableWaypointModule) {
                 waypointServer =  new LocalWaypointServer();
                 waypointServer.start();
             }

@@ -1,5 +1,6 @@
 package io.github.kreiseljustus.asmputils;
 
+import com.nimbusds.common.contenttype.ContentType;
 import io.github.kreiseljustus.asmputils.core.*;
 import io.github.kreiseljustus.asmputils.core.data.ShopDataManager;
 import io.github.kreiseljustus.asmputils.core.modules.commands.CommandsModule;
@@ -8,20 +9,16 @@ import io.github.kreiseljustus.asmputils.core.modules.shop.ShopModule;
 import io.github.kreiseljustus.asmputils.core.modules.WaystoneModule;
 import io.github.kreiseljustus.asmputils.core.modules.waypoints.WaypointModule;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.ChunkPos;
 
+import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class Asmputils implements ClientModInitializer {
     public static ModConfig s_Config;
@@ -66,23 +63,36 @@ public class Asmputils implements ClientModInitializer {
         Thread fetcherThread = ServerValidator.getFetcherThread();
         fetcherThread.start();
 
+        //Cant disable modules while in game. Use reflection to check??
+
         if(s_Config.enableShopModule) {
             modules.add(new ShopModule());
         }
         if(s_Config.enableWaystoneModule) {
             modules.add(new WaystoneModule());
         }
-        if(s_Config.enableWaypointFeature) {
+        if(s_Config.enableWaypointModule) {
             modules.add(new WaypointModule());
         }
-
-        //Need to add a config value after merge
-        modules.add(new CommandsModule());
-
+        if(s_Config.enableCommandsModule) {
+            modules.add(new CommandsModule());
+        }
         for(IModule module : modules) {
             module.onInitClient();
         }
     }
+
+    /*public boolean getModuleOn(Class<?> klasse) {
+        try {
+            String fieldName = "enable" + klasse.getSimpleName();
+
+            var field = s_Config.getClass().getDeclaredField(fieldName);
+
+            return field.getBoolean(s_Config);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }*/
 
     public void onClientTick(MinecraftClient client) {
         s_Config = ModConfig.get();

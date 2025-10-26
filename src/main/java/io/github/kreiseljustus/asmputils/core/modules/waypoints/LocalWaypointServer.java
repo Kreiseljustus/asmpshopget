@@ -10,6 +10,9 @@ import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
+import io.github.kreiseljustus.asmputils.ModConfig;
+import io.github.kreiseljustus.asmputils.WaypointHelper;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -111,7 +114,7 @@ public class LocalWaypointServer {
         ModConfig cfg = ModConfig.get();
 
         // Check if feature is enabled
-        if (!cfg.enableWaypointFeature) {
+        if (!cfg.enableWaypointModule) {
             client.player.sendMessage(Text.of("[ASMP Utils] Waypoint feature disabled in config."), false);
             return;
         }
