@@ -1,6 +1,6 @@
 # About
 
-ASMP ShopGet is a Minecraft Mod designed around player-made shops on a server i play on. <br>
+[ASMP ShopGet}(https://modrinth.com/mod/asmp-shopget) is a Minecraft Mod designed around player-made shops on a server i play on. <br>
 It collects data from shops by parsing sign data and then sends them to a seperate [website](https://github.com/Kreiseljustus/ASMP-Shop-Site) to display them online without having to be playing on the server.
 
 ## Building
