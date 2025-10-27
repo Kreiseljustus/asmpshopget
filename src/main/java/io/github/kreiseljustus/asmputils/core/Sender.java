@@ -2,10 +2,7 @@ package io.github.kreiseljustus.asmputils.core;
 
 import com.google.gson.Gson;
 import io.github.kreiseljustus.asmputils.*;
-import io.github.kreiseljustus.asmputils.core.data.ShopDataHolder;
-import io.github.kreiseljustus.asmputils.core.data.ShopDataManager;
-import io.github.kreiseljustus.asmputils.core.data.ShopWaystoneUploadPacket;
-import io.github.kreiseljustus.asmputils.core.data.WaystoneDataHolder;
+import io.github.kreiseljustus.asmputils.core.data.*;
 import io.github.kreiseljustus.asmputils.core.modules.WaystoneModule;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -17,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Sender {
+    private static ModConfig config = Asmputils.s_Config;
     static Gson gson = new Gson();
 
     public static void sendDeleteRequest(ShopDataHolder shop) {
@@ -46,22 +44,34 @@ public class Sender {
         }).start();
     }
 
-    public static void sendCachedData() {
+    public static void sendCachedShopData() {
         List<ShopDataHolder> shops = new ArrayList<>(ShopDataManager.s_CachedShops);
-        List<WaystoneDataHolder> waystones = new ArrayList<>(WaystoneModule.s_CachedWaystones);
-
-        if(shops.isEmpty() && waystones.isEmpty()) {
+        if(shops.isEmpty()) {
             Utils.debug("No cached data to send");
             return;
         }
-
-        ModConfig config = Asmputils.s_Config;
         if(config.postUrl == null || config.postUrl.isEmpty()) return;
 
+        ShopUploadPacket packet = new ShopUploadPacket(shops);
+        sendDataFromClient(packet);
+    }
+
+    public static void sendCachedWaystoneData() {
+        List<WaystoneDataHolder> waystones = new ArrayList<>(WaystoneModule.s_CachedWaystones);
+        if(waystones.isEmpty()) {
+            Utils.debug("No cached data to send");
+            return;
+        }
+        if(config.postUrl == null || config.postUrl.isEmpty()) return;
+
+        WaystoneUploadPacket packet = new WaystoneUploadPacket(waystones);
+        sendDataFromClient(packet);
+    }
+
+    public static <T> void sendDataFromClient(T packet){
         HttpPost post = new HttpPost(config.postUrl);
         new Thread(() -> {
             try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
-                ShopWaystoneUploadPacket packet = new ShopWaystoneUploadPacket(shops,waystones);
                 StringEntity postString = new StringEntity(gson.toJson(packet), ContentType.APPLICATION_JSON);
                 Utils.debug(gson.toJson(packet));
                 post.setEntity(postString);
