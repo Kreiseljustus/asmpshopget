@@ -1,11 +1,7 @@
 package io.github.kreiseljustus.asmputils.core.modules.waypoints;
 
-import io.github.kreiseljustus.asmputils.Asmputils;
 import io.github.kreiseljustus.asmputils.core.IModule;
-import io.github.kreiseljustus.asmputils.core.Sender;
 import io.github.kreiseljustus.asmputils.core.Utils;
-import io.github.kreiseljustus.asmputils.core.data.ShopDataManager;
-import io.github.kreiseljustus.asmputils.core.modules.WaystoneModule;
 import net.minecraft.util.math.ChunkPos;
 
 import static io.github.kreiseljustus.asmputils.Asmputils.s_Config;
@@ -29,10 +25,6 @@ public class WaypointModule implements IModule {
 
     @Override
     public void onTick() {
-        if(Asmputils.s_TicksInASMPServer % Asmputils.s_Config.ticksBetweenSends == 0) {
-            Sender.sendCachedWaystoneData();
-            WaystoneModule.s_CachedWaystones.clear();
-        }
 
     }
 
