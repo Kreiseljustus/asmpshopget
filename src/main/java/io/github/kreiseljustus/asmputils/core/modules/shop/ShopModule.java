@@ -132,7 +132,8 @@ public class ShopModule implements IModule{
     @Override
     public void onTick() {
         if(Asmputils.s_TicksInASMPServer % Asmputils.s_Config.ticksBetweenSends == 0) {
-
+            Sender.sendCachedShopData();
+            ShopDataManager.s_CachedShops.clear();
         }
     }
 

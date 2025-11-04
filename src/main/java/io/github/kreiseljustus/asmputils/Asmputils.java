@@ -126,12 +126,6 @@ public class Asmputils implements ClientModInitializer {
 
         if(s_TicksInASMPServer % s_Config.ticksBetweenSends == 0) {
             if(!VersionManagement.s_UsingLatestVersion) {Utils.debug("Discarding- not up-to date!"); s_TicksInASMPServer++; return;}
-            Utils.debug("Attempting to send cached shops");
-
-            //Gotta refactor sender to be able to send shops and waystones separately
-            Sender.sendCachedData();
-            ShopDataManager.s_CachedShops.clear();
-            WaystoneModule.s_CachedWaystones.clear();
         }
 
         s_TicksInASMPServer++;

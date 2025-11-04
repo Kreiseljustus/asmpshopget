@@ -1,6 +1,7 @@
 package io.github.kreiseljustus.asmputils.core.modules;
 
 import io.github.kreiseljustus.asmputils.Asmputils;
+import io.github.kreiseljustus.asmputils.core.Sender;
 import io.github.kreiseljustus.asmputils.core.Utils;
 import io.github.kreiseljustus.asmputils.core.IModule;
 import io.github.kreiseljustus.asmputils.core.data.WaystoneDataHolder;
@@ -92,6 +93,11 @@ public class WaystoneModule implements IModule {
     @Override
     public void onTick() {
         waystoneTick(MinecraftClient.getInstance());
+
+        if(Asmputils.s_TicksInASMPServer % Asmputils.s_Config.ticksBetweenSends == 0) {
+            Sender.sendCachedWaystoneData();
+            WaystoneModule.s_CachedWaystones.clear();
+        }
     }
 
     @Override
