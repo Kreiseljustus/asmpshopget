@@ -6,6 +6,8 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.ChunkPos;
 
@@ -15,6 +17,13 @@ import static io.github.kreiseljustus.asmputils.Asmputils.tickDelay;
 
 public class CommandsModule implements IModule {
 
+    boolean enabled = true;
+
+    @Override
+    public String getModuleName() {
+        return "CommandsModule";
+    }
+
     @Override
     public void onInitClient() {
 
@@ -23,6 +32,10 @@ public class CommandsModule implements IModule {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             dispatcher.register(ClientCommandManager.literal("shopsite")
                     .executes(context -> {
+                        if(!enabled) {
+                            context.getSource().sendFeedback(Text.literal("The commands module is disabled!").formatted(Formatting.RED));
+                            return 1;
+                        }
                         // delay ~1 tick (1 tick = 50 ms at 20 TPS)
                         tickDelay.schedule(() -> {
                             MinecraftClient client = MinecraftClient.getInstance();
@@ -44,13 +57,14 @@ public class CommandsModule implements IModule {
     }
 
     @Override
-    public void onTick() {
-
+    public void onTick(boolean enabled) {
+        this.enabled = enabled;
+        if(!enabled) return;
     }
 
     @Override
     public void onChunkEnter(ChunkPos chunkPos) {
-
+        if(!enabled) return;
     }
 
     @Override

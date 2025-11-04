@@ -74,25 +74,16 @@ public class Asmputils implements ClientModInitializer {
         if(s_Config.enableWaypointModule) {
             modules.add(new WaypointModule());
         }
-        if(s_Config.enableCommandsModule) {
-            modules.add(new CommandsModule());
-        }
+
+        //Special case.
+        //This should always register command and the commands themself check if the module
+        //is enabled or not
+        modules.add(new CommandsModule());
+
         for(IModule module : modules) {
             module.onInitClient();
         }
     }
-
-    /*public boolean getModuleOn(Class<?> klasse) {
-        try {
-            String fieldName = "enable" + klasse.getSimpleName();
-
-            var field = s_Config.getClass().getDeclaredField(fieldName);
-
-            return field.getBoolean(s_Config);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }*/
 
     public void onClientTick(MinecraftClient client) {
         s_Config = ModConfig.get();
@@ -111,7 +102,8 @@ public class Asmputils implements ClientModInitializer {
         if(s_Config.ticksBetweenSends < 400) s_Config.ticksBetweenSends = 600;
 
         for(IModule module : modules) {
-            module.onTick();
+            boolean enabled = Utils.getModuleOn(module.getModuleName());
+            module.onTick(enabled);
         }
 
         ChunkPos currentChunkPosition = new ChunkPos(s_Player.getBlockPos());

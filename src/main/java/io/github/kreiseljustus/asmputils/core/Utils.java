@@ -18,6 +18,18 @@ public class Utils {
     public static void debug(String message) {
         if(!Asmputils.s_Config.enableDebugMode || !Asmputils.s_Config.enable) return;
         System.out.println(message);
-        Asmputils.s_Player.sendMessage(Text.of("[ASMP Utils]" + message), false);
+        Asmputils.s_Player.sendMessage(Text.of("[ASMP Utils] " + message), false);
+    }
+
+    public static boolean getModuleOn(String moduleName) {
+        try {
+            String fieldName = "enable" + moduleName;
+
+            var field = Asmputils.s_Config.getClass().getDeclaredField(fieldName);
+
+            return field.getBoolean(Asmputils.s_Config);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -27,6 +27,8 @@ import java.util.regex.Pattern;
 
 public class ShopModule implements IModule{
 
+    boolean enabled = true;
+
     static List<ShopDataHolder> foundShops = new ArrayList<>();
 
     public static void handleShopDetection(ChunkPos currentChunk) {
@@ -125,12 +127,20 @@ public class ShopModule implements IModule{
     }
 
     @Override
+    public String getModuleName() {
+        return "ShopModule";
+    }
+
+    @Override
     public void onInitClient() {
 
     }
 
     @Override
-    public void onTick() {
+    public void onTick(boolean enabled) {
+        this.enabled = enabled;
+        if(!enabled) return;
+
         if(Asmputils.s_TicksInASMPServer % Asmputils.s_Config.ticksBetweenSends == 0) {
             Sender.sendCachedShopData();
             ShopDataManager.s_CachedShops.clear();
@@ -139,6 +149,7 @@ public class ShopModule implements IModule{
 
     @Override
     public void onChunkEnter(ChunkPos chunkPos) {
+        if(!enabled) return;
         if(Asmputils.s_Config.trackShops) {
             handleShopDetection(chunkPos);
         }

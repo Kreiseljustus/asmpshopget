@@ -11,6 +11,11 @@ public class WaypointModule implements IModule {
     private static LocalWaypointServer waypointServer = null;
 
     @Override
+    public String getModuleName() {
+        return "WaypointModule";
+    }
+
+    @Override
     public void onInitClient() {
         try {
             if(s_Config.enableWaypointModule) {
@@ -24,7 +29,7 @@ public class WaypointModule implements IModule {
     }
 
     @Override
-    public void onTick() {
+    public void onTick(boolean moduleEnabled) {
 
     }
 

@@ -18,6 +18,8 @@ import java.util.LinkedList;
 
 public class WaystoneModule implements IModule {
 
+    boolean enabled = true;
+
     public static LinkedList<WaystoneDataHolder> s_CachedWaystones = new LinkedList<>();
     private static LinkedList<String> checkedInventories = new LinkedList<>();
 
@@ -86,12 +88,20 @@ public class WaystoneModule implements IModule {
     }
 
     @Override
+    public String getModuleName() {
+        return "WaystoneModule";
+    }
+
+    @Override
     public void onInitClient() {
 
     }
 
     @Override
-    public void onTick() {
+    public void onTick(boolean enabled) {
+        this.enabled = enabled;
+        if(!enabled) return;
+
         waystoneTick(MinecraftClient.getInstance());
 
         if(Asmputils.s_TicksInASMPServer % Asmputils.s_Config.ticksBetweenSends == 0) {
@@ -102,7 +112,7 @@ public class WaystoneModule implements IModule {
 
     @Override
     public void onChunkEnter(ChunkPos chunkPos) {
-
+        if(!enabled) return;
     }
 
     @Override

@@ -1,8 +1,10 @@
 package io.github.kreiseljustus.asmputils.core;
 
+import io.github.kreiseljustus.asmputils.Asmputils;
 import io.github.kreiseljustus.asmputils.Constants;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -21,7 +23,8 @@ public class VersionManagement {
     public static void checkAndWarnVersion(PlayerEntity player) {
         if(!isOldVersion()) {s_UsingLatestVersion = true; Utils.debug("Using latest version!"); return;}
         if(s_WarningGiven) return;
-        player.sendMessage(Text.of("Your version is outdated! You wont contribute any data until the mod is updated."), false);
+        player.sendMessage(Text.of(Text.literal("Your version is outdated! You won't contribute any data until the mod is updated.")
+                .formatted(Formatting.RED)), false);
 
         s_UsingLatestVersion = false;
         s_WarningGiven = true;
@@ -63,7 +66,7 @@ public class VersionManagement {
                 return reader.readLine();
             }
         } catch(Exception e) {
-            Utils.debug("Failed to fetch version! Please report this to Crisel on discord");
+            Asmputils.s_Player.sendMessage(Text.of("Failed to fetch version! Please report this to Crisel on discord"), false);
             return null;
         }
     }
