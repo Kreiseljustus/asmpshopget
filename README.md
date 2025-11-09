@@ -15,6 +15,10 @@ It collects data from shops by parsing sign data and then sends them to a sepera
 The configuration file can be found in your Minecraft profile folder under 'configs/asmpshopget.json'. <br>
 ASMP ShopGet also provides a [Mod Menu](https://modrinth.com/mod/modmenu/) api implementation for editing the config while in-game! <br>
 
+## Features i might add
+
+ * AI summarize, basically send the last 30 messages to an AI api and get a summary
+
 ## Contributing
 
 1. Fork the project
