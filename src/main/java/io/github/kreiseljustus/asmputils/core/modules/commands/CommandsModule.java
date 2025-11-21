@@ -1,23 +1,19 @@
 package io.github.kreiseljustus.asmputils.core.modules.commands;
 
 import io.github.kreiseljustus.asmputils.core.IModule;
-import io.github.kreiseljustus.asmputils.core.Utils;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.ChunkPos;
-
-import java.util.concurrent.TimeUnit;
-
-import static io.github.kreiseljustus.asmputils.Asmputils.tickDelay;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CommandsModule implements IModule {
 
     boolean enabled = true;
+
+    public static List<ICommand> commands = new LinkedList<>();
 
     @Override
     public String getModuleName() {
@@ -27,33 +23,23 @@ public class CommandsModule implements IModule {
     @Override
     public void onInitClient() {
 
-        //This will be changed to allow for better command creation
+        //Reflection?
+        commands.add(new ShopsiteCommand());
 
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            dispatcher.register(ClientCommandManager.literal("shopsite")
-                    .executes(context -> {
-                        if(!enabled) {
-                            context.getSource().sendFeedback(Text.literal("The commands module is disabled!").formatted(Formatting.RED));
-                            return 1;
-                        }
-                        // delay ~1 tick (1 tick = 50 ms at 20 TPS)
-                        tickDelay.schedule(() -> {
-                            MinecraftClient client = MinecraftClient.getInstance();
-                            client.execute(() -> {
-                                client.setScreen(new ConfirmLinkScreen(confirmed -> {
-                                    if (confirmed) {
-                                        Util.getOperatingSystem().open("https://kreiseljustus.com");
-                                    } else {
-                                        Utils.debug("User cancelled");
-                                    }
-                                    client.setScreen(null);
-                                }, "https://kreiseljustus.com", true));
-                            });
-                        }, 50, TimeUnit.MILLISECONDS);
+        for(ICommand command : commands) {
+            ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+                dispatcher.register(command.build(ClientCommandManager.literal(command.getCommandName()))
+                        .executes(context -> {
 
-                        return 1;
-                    }));
-        });
+                            if(!enabled) {
+                                context.getSource().sendFeedback(Text.literal("The commands module is disabled! Enable it in the config").formatted(Formatting.RED));
+                                return 1;
+                            }
+
+                            return command.execute(context);
+                        }));
+            });
+        }
     }
 
     @Override
