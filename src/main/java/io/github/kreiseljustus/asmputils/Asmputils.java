@@ -4,6 +4,7 @@ import com.nimbusds.common.contenttype.ContentType;
 import io.github.kreiseljustus.asmputils.core.*;
 import io.github.kreiseljustus.asmputils.core.data.ShopDataManager;
 import io.github.kreiseljustus.asmputils.core.modules.commands.CommandsModule;
+import io.github.kreiseljustus.asmputils.core.modules.fakeWater.WaterModule;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ServerValidator;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ShopModule;
 import io.github.kreiseljustus.asmputils.core.modules.WaystoneModule;
@@ -63,17 +64,10 @@ public class Asmputils implements ClientModInitializer {
         Thread fetcherThread = ServerValidator.getFetcherThread();
         fetcherThread.start();
 
-        //Cant disable modules while in game. Use reflection to check??
+        modules.add(new ShopModule());
+        modules.add(new WaystoneModule());
+        modules.add(new WaypointModule());
 
-        if(s_Config.enableShopModule) {
-            modules.add(new ShopModule());
-        }
-        if(s_Config.enableWaystoneModule) {
-            modules.add(new WaystoneModule());
-        }
-        if(s_Config.enableWaypointModule) {
-            modules.add(new WaypointModule());
-        }
 
         //Special case.
         //This should always register command and the commands themself check if the module
