@@ -25,6 +25,7 @@ public class CommandsModule implements IModule {
 
         //Reflection?
         commands.add(new ShopsiteCommand());
+        commands.add(new EvalCommand());
 
         for(ICommand command : commands) {
             ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
