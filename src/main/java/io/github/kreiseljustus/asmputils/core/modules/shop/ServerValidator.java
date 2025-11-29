@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//needs documentation
 public class ServerValidator {
 
     private static final Gson gson = new Gson();

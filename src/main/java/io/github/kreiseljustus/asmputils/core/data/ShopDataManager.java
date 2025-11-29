@@ -2,6 +2,9 @@ package io.github.kreiseljustus.asmputils.core.data;
 
 import java.util.LinkedList;
 
+/**
+ * Holds a List of cached Shops
+ */
 public class ShopDataManager {
     public static LinkedList<ShopDataHolder> s_CachedShops = new LinkedList<>();
 
