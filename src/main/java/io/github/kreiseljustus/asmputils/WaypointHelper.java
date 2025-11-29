@@ -21,7 +21,7 @@ public class WaypointHelper {
      * @param name name of the Waypoint
      * @param initials short acronym of the Waypoint name
      * @param color color of the Waypoint
-     * @param purpose
+     * @param purpose description of the waypoint
      * @param temporary decides whether a Waypoint should be permanent or temporary
      * @param requestedDimensionRoot dimension in which the Waypoint is located
      */
