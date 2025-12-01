@@ -1,7 +1,6 @@
 # About
 
-[ASMP ShopGet](https://modrinth.com/mod/asmp-shopget) is a Minecraft Mod designed around player-made shops on a server i play on. <br>
-It collects data from shops by parsing sign data and then sends them to a seperate [website](https://github.com/Kreiseljustus/ASMP-Shop-Site) to display them online without having to be playing on the server.
+[ASMP Utils](https://modrinth.com/mod/asmp-utils) is a minecraft mod with certain useful features when playing on the AtriocSMP. <br>
 
 ## Building
 
@@ -16,8 +15,6 @@ The configuration file can be found in your Minecraft profile folder under 'conf
 ASMP ShopGet also provides a [Mod Menu](https://modrinth.com/mod/modmenu/) api implementation for editing the config while in-game! <br>
 
 ## Features i might add
-
- * AI summarize, basically send the last 30 messages to an AI api and get a summary
 
 ## Contributing
 
