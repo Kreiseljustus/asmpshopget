@@ -5,9 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Objects;
 
-/**
- * Holds all relevant Data from a Shop
- */
 public class ShopDataHolder {
     public String Owner;
     public int[] position;

@@ -5,9 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Objects;
 
-/**
- * Holds all relevant Data from a Waystone
- */
 public class WaystoneDataHolder {
     public String Owner;
     public String Name;
