@@ -64,7 +64,6 @@ public class ShopDataHolder {
                 Objects.equals(item, that.item);
     }
 
-    //needs comment/documentation
     @Override
     public int hashCode() {
         int result = Objects.hash(Owner, Arrays.hashCode(position), price,item,action,amount,dimension);
