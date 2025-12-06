@@ -15,7 +15,16 @@ import xaero.hud.path.XaeroPath;
 
 public class WaypointHelper {
 
-    // Creates a Xaero's Minimap waypoint at the given position and dimension.
+    /**
+     * Creates a Xaero's Minimap Waypoint
+     * @param pos position of the Waypoint
+     * @param name name of the Waypoint
+     * @param initials short acronym of the Waypoint name
+     * @param color color of the Waypoint
+     * @param purpose description of the waypoint
+     * @param temporary decides whether a Waypoint should be permanent or temporary
+     * @param requestedDimensionRoot dimension in which the Waypoint is located
+     */
     public void createWaypoint(BlockPos pos, String name, String initials,
                                WaypointColor color, WaypointPurpose purpose,
                                boolean temporary, String requestedDimensionRoot) {
@@ -35,7 +44,14 @@ public class WaypointHelper {
         client.execute(() -> addWaypoint(client, waypoint, requestedDimensionRoot, pos, name));
     }
 
-    // Adds the waypoint to world and saves the change.
+    /**
+     * Add Waypoint to the world
+     * @param client user client
+     * @param waypoint waypoint
+     * @param dimensionRoot dimension in which the Waypoint is located
+     * @param pos position of the Waypoint
+     * @param name name of the Waypoint
+     */
     private void addWaypoint(MinecraftClient client, Waypoint waypoint, String dimensionRoot, BlockPos pos, String name) {
         try {
             MinimapSession session = (MinimapSession) BuiltInHudModules.MINIMAP.getCurrentSession();

@@ -10,7 +10,15 @@ public class WaystoneDataHolder {
     public String Name;
     public int[] position;
 
-    public int dimension; //0 overworld, 1 nether, 2 end
+    /**
+     * Dimension in which the Shop is located
+     * <ul>
+     *     <li>{@code int} 0 is "overworld"</li>
+     *     <li>{@code int} 1 is "nether"</li>
+     *     <li>{@code int} 2 is "end"</li>
+     * </ul>
+     */
+    public int dimension;
 
     public WaystoneDataHolder(@NotNull String Owner, @NotNull String Name, int @NotNull [] position, int dimension) {
         this.Owner = Owner;

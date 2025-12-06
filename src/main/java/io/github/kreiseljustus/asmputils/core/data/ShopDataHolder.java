@@ -10,9 +10,27 @@ public class ShopDataHolder {
     public int[] position;
     public float price;
     public String item;
-    int action; // 0 is buying 1 is selling 2 is out of stock
+
+    /**
+     * Current State of the Shop
+     * <ul>
+     *     <li>{@code int} 0 is "buying"</li>
+     *     <li>{@code int} 1 is "selling"</li>
+     *     <li>{@code int} 2 is "out of stock"</li>
+     * </ul>
+     */
+    int action;
     public int amount;
-    public int dimension; //0 overworld, 1 nether, 2 end
+
+    /**
+     * Dimension in which the Shop is located
+     * <ul>
+     *     <li>{@code int} 0 is "overworld"</li>
+     *     <li>{@code int} 1 is "nether"</li>
+     *     <li>{@code int} 2 is "end"</li>
+     * </ul>
+     */
+    public int dimension;
 
     public ShopDataHolder(@NotNull String owner, int[] position, float price, String item, int action, int amount, int dimension) throws ShopException {
         if(owner.isEmpty()) throw new ShopException();
