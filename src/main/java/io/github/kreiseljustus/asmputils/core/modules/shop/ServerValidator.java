@@ -18,13 +18,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Manages HTTP requests to receive known shops
+ */
 public class ServerValidator {
 
+    //Put in Utils?
     private static final Gson gson = new Gson();
 
     private static List<ShopDataHolder> s_ServerShops = new ArrayList<>();
 
-    public static List<ShopDataHolder> getExpectedShopsInChunk(int chunkX, int chunkZ) {
+    /**
+     *
+     * @param chunkX chunkX coordinate
+     * @param chunkZ chunkZ coordinate
+     * @return List of {@code ShopDataHolder} that are currently saved on the server but might have been removed
+     * since the last sent shop update
+     */
+    protected static List<ShopDataHolder> getExpectedShopsInChunk(int chunkX, int chunkZ) {
         List<ShopDataHolder> result = new ArrayList<>();
 
         if(s_ServerShops == null || s_ServerShops.isEmpty()) return result;
@@ -43,6 +54,10 @@ public class ServerValidator {
         return result;
     }
 
+    /**
+     *
+     * @return thread that tries to receive the current server data every {@code s_Config.fetcherThreadInterval} milliseconds
+     */
     public static @NotNull Thread getFetcherThread() {
         Thread fetcherThread = new Thread(() -> {
             while (true) {
@@ -66,13 +81,21 @@ public class ServerValidator {
         return fetcherThread;
     }
 
-    public static void getServerData() {
+    /**
+     * Downloads the servers shops and saves them in {@code s_ServerShops}
+     */
+    private static void getServerData() {
         String shopJson = downloadUrl(Asmputils.s_Config.shopRoute);
 
         Type shopListType = new TypeToken<List<ShopDataHolder>>() {}.getType();
         s_ServerShops = gson.fromJson(shopJson, shopListType);
     }
 
+    /**
+     *
+     * @param urlString url
+     * @return String downloaded from url
+     */
     private static String downloadUrl(String urlString) {
         try {
             URL url = new URI(urlString).toURL();
