@@ -4,7 +4,6 @@ import com.nimbusds.common.contenttype.ContentType;
 import io.github.kreiseljustus.asmputils.core.*;
 import io.github.kreiseljustus.asmputils.core.data.ShopDataManager;
 import io.github.kreiseljustus.asmputils.core.modules.commands.CommandsModule;
-import io.github.kreiseljustus.asmputils.core.modules.fakeWater.WaterModule;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ServerValidator;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ShopModule;
 import io.github.kreiseljustus.asmputils.core.modules.WaystoneModule;
