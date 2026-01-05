@@ -30,12 +30,12 @@ public class ShopsiteCommand implements ICommand{
             client.execute(() -> {
                 client.setScreen(new ConfirmLinkScreen(confirmed -> {
                     if (confirmed) {
-                        Util.getOperatingSystem().open("https://kreiseljustus.com");
+                        Util.getOperatingSystem().open("https://asmp.mia.jetzt/");
                     } else {
                         Utils.debug("User cancelled");
                     }
                     client.setScreen(null);
-                }, "https://kreiseljustus.com", true));
+                }, "https://asmp.mia.jetzt/", true));
             });
         }, 50, TimeUnit.MILLISECONDS);
 
