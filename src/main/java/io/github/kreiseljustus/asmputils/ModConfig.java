@@ -18,7 +18,7 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public boolean trackWaystones = true;
     @ConfigEntry.Category("General")
-    public String postUrl = "https://kreiseljustus.com/asmp/post";
+    public String postUrl = "https://asmp.mia.jetzt/api/post";
     @ConfigEntry.Category("General")
     @ConfigEntry.Gui.Tooltip
     public int ticksBetweenSends = 600;
@@ -69,9 +69,9 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("Dev")
     public boolean allowOnAllServers = false;
     @ConfigEntry.Category("Dev")
-    public String shopRoute = "https://kreiseljustus.com/asmp/api/shops";
+    public String shopRoute = "https://asmp.mia.jetzt/api/shops";
     @ConfigEntry.Category("Dev")
-    public String deleteRoute = "https://kreiseljustus.com/asmp/api/delete";
+    public String deleteRoute = "https://asmp.mia.jetzt/api/delete";
 
 
     public static void register() {
