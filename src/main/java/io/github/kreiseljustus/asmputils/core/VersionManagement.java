@@ -23,7 +23,7 @@ public class VersionManagement {
     public static void checkAndWarnVersion(PlayerEntity player) {
         if(!isOldVersion()) {s_UsingLatestVersion = true; Utils.debug("Using latest version!"); return;}
         if(s_WarningGiven) return;
-        player.sendMessage(Text.of(Text.literal("Your version is outdated! You won't contribute any data until the mod is updated.")
+        player.sendMessage(Text.of(Text.literal("[ASMP Utils] Your version is outdated! You won't contribute any data until the mod is updated.")
                 .formatted(Formatting.RED)), false);
 
         s_UsingLatestVersion = false;

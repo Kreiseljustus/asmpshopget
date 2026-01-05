@@ -78,7 +78,7 @@ public class Sender {
                 post.setHeader("Content-Type", "application/json");
 
                 client.execute(post);
-                Utils.debug("Sent cached shops & waystone data.");
+                Utils.debug("Sent data packet.");
             } catch (Exception e) {
                 e.printStackTrace();
                 Utils.debug(e.getMessage());
