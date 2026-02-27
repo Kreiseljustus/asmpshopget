@@ -9,6 +9,13 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 @Config(name = "asmpshopget")
 public class ModConfig implements ConfigData {
     @ConfigEntry.Category("General")
+    @ConfigEntry.Gui.Excluded
+    public int configVersion = 1;
+    @ConfigEntry.Category("General")
+    @ConfigEntry.Gui.Excluded
+    public static final int CURRENT_CONFIG_VERSION = 2;
+
+    @ConfigEntry.Category("General")
     @ConfigEntry.Gui.Tooltip
     public boolean enable = true;
     @ConfigEntry.Category("Tracking")
@@ -78,5 +85,24 @@ public class ModConfig implements ConfigData {
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
     }
 
-    public static ModConfig get() {return AutoConfig.getConfigHolder(ModConfig.class).getConfig();}
+    public static ModConfig get() {
+        return AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+    }
+
+    public static void validateAndUpdate() {
+        var holder = AutoConfig.getConfigHolder(ModConfig.class);
+        ModConfig config = holder.getConfig();
+
+        if (config.configVersion < 2) {
+            System.out.println("[ASMP Utils] Updating endpoint URLs to new defaults.");
+
+            ModConfig defaults = new ModConfig();
+            config.postUrl = defaults.postUrl;
+            config.shopRoute = defaults.shopRoute;
+            config.deleteRoute = defaults.deleteRoute;
+
+            config.configVersion = CURRENT_CONFIG_VERSION;
+            holder.save();
+    }
+}
 }

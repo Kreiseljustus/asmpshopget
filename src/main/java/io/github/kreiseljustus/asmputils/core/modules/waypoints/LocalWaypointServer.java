@@ -74,7 +74,7 @@ public class LocalWaypointServer {
     // Adds CORS headers for browser requests
     private void addCORS(HttpExchange exchange) {
         String origin = exchange.getRequestHeaders().getFirst("Origin");
-        if (origin != null && (origin.equals("https://kreiseljustus.com") || origin.startsWith("http://localhost") || origin.equals("asmp.mia.jetzt"))) {
+        if (origin != null && (origin.equals("https://kreiseljustus.com") || origin.startsWith("http://localhost") || origin.equals("https://asmp.mia.jetzt"))) {
             exchange.getResponseHeaders().add("Access-Control-Allow-Origin", origin);
         }
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "POST, OPTIONS");
