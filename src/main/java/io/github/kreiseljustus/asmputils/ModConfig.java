@@ -1,10 +1,17 @@
 package io.github.kreiseljustus.asmputils;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import io.github.kreiseljustus.asmputils.core.Utils;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URI;
 
 @Config(name = "asmpshopget")
 public class ModConfig implements ConfigData {
@@ -93,16 +100,40 @@ public class ModConfig implements ConfigData {
         var holder = AutoConfig.getConfigHolder(ModConfig.class);
         ModConfig config = holder.getConfig();
 
-        if (config.configVersion < 2) {
-            System.out.println("[ASMP Utils] Updating endpoint URLs to new defaults.");
+        //Dont change!!!
+        String configUrl = "https://raw.githubusercontent.com/Kreiseljustus/asmp-utils/refs/heads/CONFIG/CONFIG.json";
 
-            ModConfig defaults = new ModConfig();
-            config.postUrl = defaults.postUrl;
-            config.shopRoute = defaults.shopRoute;
-            config.deleteRoute = defaults.deleteRoute;
+        try {
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(new URI(configUrl).toURL().openStream())
+            );
 
-            config.configVersion = CURRENT_CONFIG_VERSION;
+            StringBuilder jsonText = new StringBuilder();
+            String line;
+            while((line = reader.readLine()) != null) {
+                jsonText.append(line);
+            }
+
+            Utils.debug(jsonText.toString());
+
+            JsonObject json = JsonParser.parseString(jsonText.toString()).getAsJsonObject();
+
+            int remoteConfigVersion = json.get("version").getAsInt();
+
+            if(config.configVersion >= remoteConfigVersion) return;
+
+            config.postUrl = json.get("postUrl").getAsString();
+            config.shopRoute = json.get("shopRoute").getAsString();
+            config.deleteRoute = json.get("deleteRoute").getAsString();
+
+            config.configVersion = remoteConfigVersion;
             holder.save();
+
+            Utils.debug("Saved config: " + json);
+
+        } catch (Exception e) {
+            Utils.debug("Something went wrong while trying to get the current config!");
+            e.printStackTrace();
+        }
     }
-}
 }

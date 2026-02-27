@@ -16,8 +16,8 @@ public class Utils {
     }
 
     public static void debug(String message) {
-        if(!Asmputils.s_Config.enableDebugMode || !Asmputils.s_Config.enable || Asmputils.s_Player == null) return;
         System.out.println(message);
+        if(!Asmputils.s_Config.enableDebugMode || !Asmputils.s_Config.enable || Asmputils.s_Player == null) return;
         Asmputils.s_Player.sendMessage(Text.of("[ASMP Utils] " + message), false);
     }
 

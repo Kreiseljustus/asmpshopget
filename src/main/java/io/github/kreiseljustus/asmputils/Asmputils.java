@@ -42,9 +42,9 @@ public class Asmputils implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ModConfig.register();
-        ModConfig.validateAndUpdate();
 
         s_Config = ModConfig.get();
+        ModConfig.validateAndUpdate();
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
         ClientLifecycleEvents.CLIENT_STOPPING.register(this::onClientStop);
