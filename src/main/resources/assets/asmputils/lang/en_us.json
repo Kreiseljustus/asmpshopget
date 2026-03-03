@@ -2,13 +2,17 @@
   "text.autoconfig.asmpshopget.option.enableDebugMode": "Enable Debug Mode",
   "text.autoconfig.asmpshopget.option.postUrl": "Server URL",
   "text.autoconfig.asmpshopget.option.ticksBetweenSends": "Ticks between sending updates",
-  "text.autoconfig.asmpshopget.title": "ASMP ShopGet (send help)",
+  "text.autoconfig.asmpshopget.title": "ASMP Utils",
   "text.autoconfig.asmpshopget.option.enable": "Enable (please)",
   "text.autoconfig.asmpshopget.option.allowOnAllServers": "Allow on all servers",
   "text.autoconfig.asmpshopget.option.trackShops": "Track shops",
   "text.autoconfig.asmpshopget.option.trackWaystones": "Track waytones",
   "text.autoconfig.asmpshopget.option.sendUsername": "Send Username to track mod installs",
   "text.autoconfig.asmpshopget.option.enableWaypointFeature": "Enable waypoint feature",
+  
+  "text.autoconfig.asmpshopget.option.fetcherThreadInterval": "Fetcher Thread Interval (ms)",
+  "text.autoconfig.asmpshopget.option.shopRoute": "Shop API Route",
+  "text.autoconfig.asmpshopget.option.deleteRoute": "Delete API Route",
 
   "text.autoconfig.asmpshopget.option.enableShopModule": "Enable shop module",
   "text.autoconfig.asmpshopget.option.enableWaystoneModule": "Enable waystone module",
@@ -29,7 +33,7 @@
   "text.autoconfig.asmpshopget.option.waypointTemporary.@Tooltip": "If enabled, waypoints will be created as temporary (deleted upon disconnecting).",
   "text.autoconfig.asmpshopget.option.waypointInitial": "Waypoint initials",
   "text.autoconfig.asmpshopget.option.waypointInitial.@Tooltip": "The characters to use as the waypoint initials. Leave empty to automatically use the first character of the waypoint name.",
-  
+
 
   "text.autoconfig.asmpshopget.category.General": "General",
   "text.autoconfig.asmpshopget.category.Dev": "Developer",
