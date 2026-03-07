@@ -43,6 +43,7 @@ public class VersionManagement {
             int[] currentParts = parseVersion(Constants.VERSION);
 
             for(int i = 0; i < latestVersionParts.length; i++) {
+                Utils.debug("Remote: " + String.valueOf(latestVersionParts[i]) + " Current:" + String.valueOf(currentParts[i]));
                 if(latestVersionParts[i] > currentParts[i]) {
                     return true;
                 } else if(latestVersionParts[i] < currentParts[i]) {
@@ -63,10 +64,12 @@ public class VersionManagement {
             connection.setConnectTimeout(5000);
 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                return reader.readLine();
+                String version = reader.readLine();
+                Utils.debug("Received remote version string: " + version);
+                return version;
             }
         } catch(Exception e) {
-            Asmputils.s_Player.sendMessage(Text.of("Failed to fetch version! Please report this to Crisel on discord"), false);
+            Utils.debug("Failed to fetch version! Please report this to Crisel on discord");
             return null;
         }
     }
