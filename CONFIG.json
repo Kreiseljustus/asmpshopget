@@ -1,5 +1,5 @@
 {
-    "postUrl": "https://asmp-mia.jetzt/api/post",
+    "postUrl": "https://asmp.mia.jetzt/api/post",
     "shopRoute": "https://asmp.mia.jetzt/api/shops",
     "deleteRoute": "https://asmp.mia.jetzt/api/delete",
     "version": 2
