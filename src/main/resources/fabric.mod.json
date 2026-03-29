@@ -19,10 +19,6 @@
     ]
   },
 
-  "mixins": [
-    "asmputils.mixins.json"
-  ],
-
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",

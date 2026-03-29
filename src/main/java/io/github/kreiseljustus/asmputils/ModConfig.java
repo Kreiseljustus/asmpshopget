@@ -62,13 +62,6 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public boolean enableWaypointModule = true;
 
-    @ConfigEntry.Category("Modules")
-    @ConfigEntry.Gui.Tooltip
-    public boolean enableWaterModule = false;
-
-    @ConfigEntry.Category("Aprilfools")
-    public float extraWaterHeight = 1.0f;
-
     @ConfigEntry.Category("Waypoints")
     @ConfigEntry.Gui.Tooltip
     public WaypointColorOption waypointColor = WaypointColorOption.GOLD;
