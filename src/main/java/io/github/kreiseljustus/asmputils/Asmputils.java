@@ -3,6 +3,7 @@ package io.github.kreiseljustus.asmputils;
 import com.nimbusds.common.contenttype.ContentType;
 import io.github.kreiseljustus.asmputils.core.*;
 import io.github.kreiseljustus.asmputils.core.data.ShopDataManager;
+import io.github.kreiseljustus.asmputils.core.modules.WaterModule;
 import io.github.kreiseljustus.asmputils.core.modules.commands.CommandsModule;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ServerValidator;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ShopModule;
@@ -67,6 +68,8 @@ public class Asmputils implements ClientModInitializer {
         modules.add(new ShopModule());
         modules.add(new WaystoneModule());
         modules.add(new WaypointModule());
+
+        modules.add(new WaterModule());
 
 
         //Special case.
