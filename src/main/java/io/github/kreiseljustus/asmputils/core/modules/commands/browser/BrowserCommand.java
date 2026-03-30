@@ -9,17 +9,13 @@ import io.github.kreiseljustus.asmputils.core.modules.shop.ServerValidator;
 import io.github.kreiseljustus.asmputils.core.modules.waypoints.WaypointModule;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
-import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Util;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -28,9 +24,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static io.github.kreiseljustus.asmputils.core.modules.commands.browser.BrowserGUI.*;
-
 import static io.github.kreiseljustus.asmputils.Asmputils.tickDelay;
+import static io.github.kreiseljustus.asmputils.core.modules.commands.browser.BrowserGUI.*;
 
 public class BrowserCommand implements ICommand {
 
@@ -42,6 +37,10 @@ public class BrowserCommand implements ICommand {
 
     public static int refreshRemSeconds = 0;
     public static int refreshRemMinutes = 0;
+
+    private static String currentSearchInput = null;
+
+    private ScheduledFuture<?> cooldownTask;
 
     @Override
     public String getCommandName() {
@@ -55,11 +54,18 @@ public class BrowserCommand implements ICommand {
 
     @Override
     public int execute(CommandContext<FabricClientCommandSource> context) {
-        //Copy shops, there might be a better way to do all this
         s_ServerShops = ServerValidator.s_ServerShops;
-
         pageIndex = 1;
+        searchString = null;
+        MinecraftClient client = MinecraftClient.getInstance();
+        openBrowserScreen(client);
+        Utils.debug("Done running /browse");
+        return 0;
+    }
 
+    private BrowserScreen currentBrowserScreen = null;
+
+    private void openBrowserScreen(MinecraftClient client) {
         SimpleInventory inventory = new SimpleInventory(54);
 
         inventory.setStack(45, new ItemStack(Items.GRAY_STAINED_GLASS_PANE));
@@ -68,7 +74,12 @@ public class BrowserCommand implements ICommand {
         inventory.setStack(48, buildArrow(true));
 
         ItemStack search = new ItemStack(Items.SPYGLASS);
-        search.set(DataComponentTypes.CUSTOM_NAME, Text.literal("Search").styled(s -> s.withColor(Formatting.BOLD)));
+        search.set(DataComponentTypes.CUSTOM_NAME, Text.literal("Search").styled(s -> s.withColor(Formatting.BOLD).withItalic(false)));
+        if (searchString != null) {
+            search.set(DataComponentTypes.LORE, new LoreComponent(List.of(
+                    Text.literal(searchString).styled(s -> s.withColor(Formatting.GRAY).withItalic(false))
+            )));
+        }
         inventory.setStack(49, search);
 
         inventory.setStack(50, buildArrow(false));
@@ -78,78 +89,79 @@ public class BrowserCommand implements ICommand {
 
         buildShopItems(inventory);
 
-        MinecraftClient client = MinecraftClient.getInstance();
-        client.execute(() -> {
-            tickDelay.schedule(() -> {
-                client.execute(() -> {
-                    BrowserScreenHandler handler = new BrowserScreenHandler(0, client.player.getInventory(), inventory,
-                            (slotIndex) ->
-                            {
-                                if(slotIndex == 45 || slotIndex == 53) return;
-                                if(slotIndex == 46) {
-                                    //Filter Dimension
-                                    currentDimensionFilter = (currentDimensionFilter + 1) % 3;
-                                    inventory.setStack(46, buildDimensionFilter());
-                                } else if (slotIndex == 47) {
-                                    //Filter Buying, Selling, OfS
-                                    currentFilter = (currentFilter + 1 ) % 3;
-                                    inventory.setStack(47, buildFilterItem());
-                                } else if (slotIndex == 48) {
-                                    //Page back
-                                    pageIndex--;
-                                } else if (slotIndex == 49) {
-                                    //Searching
-                                    //Get search string somehow
-                                } else if (slotIndex== 50) {
-                                    //Page next
-                                  pageIndex++;
-                                } else if (slotIndex == 51) {
-                                    //Sorting
-                                    currentSortingIndex = (currentSortingIndex + 1) % 3;
-                                    inventory.setStack(51, buildSorting());
-                                } else if (slotIndex == 52) {
-                                    ///Refresh
-                                    inventory.setStack(52, buildRefresh());
+        tickDelay.schedule(() -> {
+            client.execute(() -> {
+                BrowserScreenHandler handler = new BrowserScreenHandler(0, client.player.getInventory(), inventory,
+                        (slotIndex) -> {
+                            if (slotIndex == 45 || slotIndex == 53) return;
 
-                                    if (refreshRemMinutes == 0 && refreshRemSeconds == 0) {
-                                        startCooldown(inventory);
-                                        ServerValidator.forceRefresh = true;
+                            if (slotIndex == 46) {
+                                currentDimensionFilter = (currentDimensionFilter + 1) % 3;
+                                inventory.setStack(46, buildDimensionFilter());
+                            } else if (slotIndex == 47) {
+                                currentFilter = (currentFilter + 1) % 3;
+                                inventory.setStack(47, buildFilterItem());
+                            } else if (slotIndex == 48) {
+                                pageIndex--;
+                            } else if (slotIndex == 49) {
+                                if (currentBrowserScreen != null) {
+                                    if (currentBrowserScreen.getSearchText() != null && !currentBrowserScreen.getSearchText().isEmpty()) {
                                     }
+                                    currentBrowserScreen.activateSearch(searchString, () -> {
+                                        String result = currentBrowserScreen.getSearchText();
+                                        searchString = (result == null || result.isEmpty()) ? null : result;
+                                        currentBrowserScreen.deactivateSearch();
+                                        // update the search item lore
+                                        ItemStack searchItem = new ItemStack(Items.SPYGLASS);
+                                        searchItem.set(DataComponentTypes.CUSTOM_NAME, Text.literal("Search").styled(s -> s.withColor(Formatting.BOLD).withItalic(false)));
+                                        if (searchString != null) {
+                                            searchItem.set(DataComponentTypes.LORE, new LoreComponent(List.of(
+                                                    Text.literal(searchString).styled(s -> s.withColor(Formatting.GRAY).withItalic(false))
+                                            )));
+                                        }
+                                        inventory.setStack(49, searchItem);
+                                        buildShopItems(inventory);
+                                    });
                                 }
-                                else {
-                                    int shopIndex = (pageIndex - 1) * 45 + slotIndex;
-                                    if (shopIndex < lastFiltered.size()) {
-                                        ShopDataHolder shop = lastFiltered.get(shopIndex);
-                                        WaypointModule.getWaypointServer().createWaypointIfAllowed(
-                                                client, shop.item + " - " + shop.Owner,
-                                                shop.position[0],
-                                                shop.position[1],
-                                                shop.position[2],
-                                                Utils.dimensionFromInt(shop.dimension)
-                                        );
-                                    }
+                                return;
+                            } else if (slotIndex == 50) {
+                                pageIndex++;
+                            } else if (slotIndex == 51) {
+                                currentSortingIndex = (currentSortingIndex + 1) % 3;
+                                inventory.setStack(51, buildSorting());
+                            } else if (slotIndex == 52) {
+                                inventory.setStack(52, buildRefresh());
+                                if (refreshRemMinutes == 0 && refreshRemSeconds == 0) {
+                                    startCooldown(inventory);
+                                    ServerValidator.forceRefresh = true;
                                 }
+                            } else {
+                                int shopIndex = (pageIndex - 1) * 45 + slotIndex;
+                                if (shopIndex < lastFiltered.size()) {
+                                    ShopDataHolder shop = lastFiltered.get(shopIndex);
+                                    WaypointModule.getWaypointServer().createWaypointIfAllowed(
+                                            client,
+                                            shop.item + " - " + shop.Owner,
+                                            shop.position[0],
+                                            shop.position[1],
+                                            shop.position[2],
+                                            Utils.dimensionFromInt(shop.dimension)
+                                    );
+                                }
+                            }
 
-                                buildShopItems(inventory);
-                            });
+                            buildShopItems(inventory);
+                        });
 
-                    client.player.currentScreenHandler = handler;
-                    client.setScreen(new GenericContainerScreen(handler, client.player.getInventory(), Text.literal("Shop Browser")));
-
-                    Utils.debug("Screen set to: " + client.currentScreen);
-                });
-            }, 50, TimeUnit.MILLISECONDS);
-        });
-
-        Utils.debug("Done running /browse");
-
-        return 0;
+                currentBrowserScreen = new BrowserScreen(handler, client.player.getInventory());
+                client.player.currentScreenHandler = handler;
+                client.setScreen(currentBrowserScreen);
+                Utils.debug("Screen set to: " + client.currentScreen);
+            });
+        }, 50, TimeUnit.MILLISECONDS);
     }
 
-    private ScheduledFuture<?> cooldownTask;
-
     private void startCooldown(SimpleInventory inventory) {
-        // cancel any existing cooldown
         if (cooldownTask != null && !cooldownTask.isDone()) {
             cooldownTask.cancel(false);
         }
@@ -161,7 +173,6 @@ public class BrowserCommand implements ICommand {
         cooldownTask = tickDelay.scheduleAtFixedRate(() -> {
             if (refreshRemSeconds == 0) {
                 if (refreshRemMinutes == 0) {
-                    // done
                     cooldownTask.cancel(false);
                     return;
                 }
@@ -181,14 +192,13 @@ public class BrowserCommand implements ICommand {
     private void buildShopItems(SimpleInventory inventory) {
         if (s_ServerShops == null) { Utils.debug("Nothing to build!"); return; }
 
-        //Filter by type
         List<ShopDataHolder> filtered = s_ServerShops.stream()
                 .filter(shop -> shop.dimension == currentDimensionFilter)
                 .filter(shop -> {
                     int mappedAction = switch (currentFilter) {
-                        case 0 -> 1; // GUI "Selling" = action 1
-                        case 1 -> 0; // GUI "Buying" = action 0
-                        case 2 -> 2; // GUI "Out of Stock" = action 2
+                        case 0 -> 1;
+                        case 1 -> 0;
+                        case 2 -> 2;
                         default -> -1;
                     };
                     return shop.action == mappedAction;
@@ -196,7 +206,6 @@ public class BrowserCommand implements ICommand {
                 .filter(shop -> searchString == null || shop.item.toLowerCase().contains(searchString.toLowerCase()))
                 .collect(Collectors.toList());
 
-        //Sort
         Comparator<ShopDataHolder> comparator = switch (currentSortingIndex) {
             case 0 -> Comparator.comparingDouble(s -> s.price);
             case 1 -> Comparator.comparingDouble((ShopDataHolder s) -> s.price).reversed();
@@ -205,7 +214,6 @@ public class BrowserCommand implements ICommand {
         };
         filtered.sort(comparator);
 
-        //Page stuff
         int itemsPerPage = 45;
         int totalPages = (int) Math.ceil(filtered.size() / (double) itemsPerPage);
         pageIndex = Math.max(1, Math.min(pageIndex, Math.max(1, totalPages)));
@@ -213,12 +221,10 @@ public class BrowserCommand implements ICommand {
         int start = (pageIndex - 1) * itemsPerPage;
         int end = Math.min(start + itemsPerPage, filtered.size());
 
-        //Clear shop slots first
         for (int i = 0; i < itemsPerPage; i++) {
             inventory.setStack(i, ItemStack.EMPTY);
         }
 
-        //Fill slots
         for (int i = start; i < end; i++) {
             ShopDataHolder shop = filtered.get(i);
             int slot = i - start;
@@ -232,7 +238,7 @@ public class BrowserCommand implements ICommand {
                 stack = new ItemStack(Items.PAPER);
             }
 
-            List<Text> lore = new ArrayList<>();
+            List<net.minecraft.text.Text> lore = new ArrayList<>();
             lore.add(Text.literal("Owner: " + shop.Owner).styled(s -> s.withColor(Formatting.GRAY).withItalic(false)));
             lore.add(Text.literal("Price: " + shop.price).styled(s -> s.withColor(Formatting.GOLD).withItalic(false)));
             lore.add(Text.literal("Amount: " + shop.amount).styled(s -> s.withColor(Formatting.YELLOW).withItalic(false)));
@@ -259,8 +265,7 @@ public class BrowserCommand implements ICommand {
             };
             lore.add(Text.literal("Dimension: " + dimText).styled(s -> s.withColor(Formatting.DARK_PURPLE).withItalic(false)));
             lore.add(Text.literal("Position: " + shop.position[0] + ", " + shop.position[1] + ", " + shop.position[2]).styled(s -> s.withColor(Formatting.GRAY).withItalic(false)));
-
-            lore.add(Text.literal("Click to add Waypoint!").styled(s->s.withColor(Formatting.DARK_GREEN).withItalic(true).withBold(true)));
+            lore.add(Text.literal("Click to add Waypoint!").styled(s -> s.withColor(Formatting.DARK_GREEN).withItalic(true).withBold(true)));
 
             stack.set(DataComponentTypes.CUSTOM_NAME,
                     Text.literal(shop.item).styled(s -> s.withColor(Formatting.WHITE).withItalic(false)));
@@ -269,7 +274,6 @@ public class BrowserCommand implements ICommand {
             inventory.setStack(slot, stack);
         }
 
-        //Disable next page / previous page when there is none
         inventory.setStack(48, pageIndex <= 1 ? buildDisabledArrow(true) : buildArrow(true));
         inventory.setStack(50, pageIndex >= totalPages ? buildDisabledArrow(false) : buildArrow(false));
 
