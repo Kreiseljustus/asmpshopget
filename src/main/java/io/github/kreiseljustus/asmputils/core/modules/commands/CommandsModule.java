@@ -1,6 +1,7 @@
 package io.github.kreiseljustus.asmputils.core.modules.commands;
 
 import io.github.kreiseljustus.asmputils.core.IModule;
+import io.github.kreiseljustus.asmputils.core.modules.commands.browser.BrowserCommand;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.text.Text;
@@ -26,6 +27,7 @@ public class CommandsModule implements IModule {
         //Reflection?
         commands.add(new ShopsiteCommand());
         commands.add(new EvalCommand());
+        commands.add(new BrowserCommand());
 
         for(ICommand command : commands) {
             ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {

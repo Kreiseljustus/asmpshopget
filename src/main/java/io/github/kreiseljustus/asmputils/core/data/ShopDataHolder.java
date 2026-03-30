@@ -19,7 +19,7 @@ public class ShopDataHolder {
      *     <li>{@code int} 2 is "out of stock"</li>
      * </ul>
      */
-    int action;
+    public int action;
     public int amount;
 
     /**

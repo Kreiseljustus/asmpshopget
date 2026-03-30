@@ -26,7 +26,9 @@ public class ServerValidator {
     //Put in Utils?
     private static final Gson gson = new Gson();
 
-    private static List<ShopDataHolder> s_ServerShops = new ArrayList<>();
+    //Might move this?
+    public static List<ShopDataHolder> s_ServerShops = new ArrayList<>();
+    public static boolean forceRefresh = false;
 
     /**
      *
@@ -70,7 +72,13 @@ public class ServerValidator {
                 }
 
                 try {
-                    Thread.sleep(Asmputils.s_Config.fetcherThreadInterval);
+                    long waited = 0;
+                    long interval = Asmputils.s_Config.fetcherThreadInterval;
+                    while (waited < interval && !forceRefresh) {
+                        Thread.sleep(100);
+                        waited += 100;
+                    }
+                    forceRefresh = false;
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     break;

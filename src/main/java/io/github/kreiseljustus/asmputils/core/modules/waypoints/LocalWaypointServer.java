@@ -12,6 +12,7 @@ import com.sun.net.httpserver.HttpServer;
 
 import io.github.kreiseljustus.asmputils.ModConfig;
 import io.github.kreiseljustus.asmputils.WaypointHelper;
+import io.github.kreiseljustus.asmputils.core.Utils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
@@ -64,7 +65,7 @@ public class LocalWaypointServer {
                     json.get("x").getAsInt(),
                     json.get("y").getAsInt(),
                     json.get("z").getAsInt(),
-                    dimensionFromInt(json.get("dimension").getAsInt())
+                    Utils.dimensionFromInt(json.get("dimension").getAsInt())
             );
         }
 
@@ -100,17 +101,8 @@ public class LocalWaypointServer {
         exchange.close();
     }
 
-    // Converts an integer ID from the frontend into a Minecraft dimension name
-    private String dimensionFromInt(int dim) {
-        return switch (dim) {
-            case 1 -> "the_nether";
-            case 2 -> "the_end";
-            default -> "overworld";
-        };
-    }
-
     // Validates settings and creates the waypoint using WaypointHelper class
-    private void createWaypointIfAllowed(MinecraftClient client, String name, int x, int y, int z, String dimension) {
+    public void createWaypointIfAllowed(MinecraftClient client, String name, int x, int y, int z, String dimension) {
         ModConfig cfg = ModConfig.get();
 
         // Check if feature is enabled

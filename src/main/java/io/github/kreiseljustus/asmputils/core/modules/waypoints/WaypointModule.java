@@ -8,6 +8,10 @@ import static io.github.kreiseljustus.asmputils.Asmputils.s_Config;
 
 public class WaypointModule implements IModule {
 
+    public static LocalWaypointServer getWaypointServer() {
+        return waypointServer;
+    }
+
     private static LocalWaypointServer waypointServer = null;
 
     @Override

@@ -32,4 +32,12 @@ public class Utils {
             throw new RuntimeException(e);
         }
     }
+
+    public static String dimensionFromInt(int dim) {
+        return switch (dim) {
+            case 1 -> "the_nether";
+            case 2 -> "the_end";
+            default -> "overworld";
+        };
+    }
 }

@@ -32,7 +32,6 @@ public class WaystoneModule implements IModule {
     public static boolean isWaystoneUI(ScreenHandler handler) {
         int waystoneGuiSlots = 6*9;
         if(handler.slots.size() < waystoneGuiSlots + 36 ) return false; //36 is player inv size
-        Utils.debug("The screen has the correct size");
 
         ItemStack head = handler.getSlot(5).getStack();
         if(!(head.getItem() == Items.PLAYER_HEAD)) return false;
