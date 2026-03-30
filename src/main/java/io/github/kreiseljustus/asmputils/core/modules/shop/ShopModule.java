@@ -36,6 +36,12 @@ public class ShopModule implements IModule{
 
         Chunk chunk = world.getChunk(currentChunk.getStartPos());
 
+        int dimension = switch (world.getDimensionEntry().getIdAsString()) {
+            case "minecraft:the_nether" -> 1;
+            case "minecraft:the_end" -> 2;
+            default -> 0;
+        };
+
         for (BlockPos pos : chunk.getBlockEntityPositions()) {
             BlockEntity entity = world.getBlockEntity(pos);
 
@@ -92,12 +98,6 @@ public class ShopModule implements IModule{
                 Utils.debug(e.getMessage());
             }
 
-            int dimension = switch (world.getDimensionEntry().getIdAsString()) {
-                case "minecraft:the_nether" -> 1;
-                case "minecraft:the_end" -> 2;
-                default -> 0;
-            };
-
             Utils.debug(world.getDimensionEntry().getIdAsString());
             Utils.debug(String.valueOf(dimension));
 
@@ -114,7 +114,7 @@ public class ShopModule implements IModule{
             foundShops.add(shop);
         }
 
-        List<ShopDataHolder> shops = ServerValidator.getExpectedShopsInChunk(chunk.getPos().x, chunk.getPos().z);
+        List<ShopDataHolder> shops = ServerValidator.getExpectedShopsInChunk(chunk.getPos().x, chunk.getPos().z, dimension);
 
         for(ShopDataHolder expectedShop : shops) {
             if(foundShops.contains(expectedShop)) continue;

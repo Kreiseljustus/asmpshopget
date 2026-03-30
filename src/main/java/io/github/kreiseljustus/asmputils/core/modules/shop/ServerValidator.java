@@ -32,10 +32,11 @@ public class ServerValidator {
      *
      * @param chunkX chunkX coordinate
      * @param chunkZ chunkZ coordinate
+     * @param dimension dimension id
      * @return List of {@code ShopDataHolder} that are currently saved on the server but might have been removed
      * since the last sent shop update
      */
-    protected static List<ShopDataHolder> getExpectedShopsInChunk(int chunkX, int chunkZ) {
+    protected static List<ShopDataHolder> getExpectedShopsInChunk(int chunkX, int chunkZ, int dimension) {
         List<ShopDataHolder> result = new ArrayList<>();
 
         if(s_ServerShops == null || s_ServerShops.isEmpty()) return result;
@@ -47,7 +48,7 @@ public class ServerValidator {
             int shopChunkX = pos[0] >> 4;
             int shopChunkZ = pos[2] >> 4;
 
-            if(shopChunkX == chunkX && shopChunkZ == chunkZ) {
+            if(shopChunkX == chunkX && shopChunkZ == chunkZ && shop.dimension == dimension) {
                 result.add(shop);
             }
         }
