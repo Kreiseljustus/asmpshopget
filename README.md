@@ -2,6 +2,17 @@
 
 [ASMP Utils](https://modrinth.com/mod/asmp-utils) is a minecraft mod with certain useful features when playing on the AtriocSMP. <br>
 
+## Installation
+### Modrinth (Recommended)
+Install the mod over [Modrinth](https://modrinth.com/mod/asmp-utils) (just add it into your instance)
+
+### Manually
+1. Go into your .minecraft directory
+2. Go into your mods folder
+3. Put the downloaded jar from the [releases](https://github.com/Kreiseljustus/asmp-utils/releases)
+
+4. All done :) (start the game)
+
 ## Building
 
 1. Clone the repository
