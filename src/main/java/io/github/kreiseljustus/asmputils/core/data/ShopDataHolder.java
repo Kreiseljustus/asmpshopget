@@ -2,6 +2,7 @@ package io.github.kreiseljustus.asmputils.core.data;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -10,6 +11,8 @@ public class ShopDataHolder {
     public int[] position;
     public float price;
     public String item;
+
+    public LocalDateTime updateTime;
 
     /**
      * Current State of the Shop
@@ -32,7 +35,7 @@ public class ShopDataHolder {
      */
     public int dimension;
 
-    public ShopDataHolder(@NotNull String owner, int[] position, float price, String item, int action, int amount, int dimension) throws ShopException {
+    public ShopDataHolder(@NotNull String owner, int[] position, float price, String item, int action, int amount, int dimension, LocalDateTime updateTime) throws ShopException {
         if(owner.isEmpty()) throw new ShopException();
         this.Owner = owner;
         if(position.length < 3) throw new ShopException();
@@ -47,6 +50,7 @@ public class ShopDataHolder {
         this.amount = amount;
         if(dimension < 0 || dimension > 2) throw new ShopException();
         this.dimension = dimension;
+        this.updateTime = updateTime;
     }
 
     @Override
