@@ -86,6 +86,8 @@ public class ModConfig implements ConfigData {
     public String shopRoute = "https://asmp.mia.jetzt/api/shops";
     @ConfigEntry.Category("Dev")
     public String deleteRoute = "https://asmp.mia.jetzt/api/delete";
+    @ConfigEntry.Category("Dev")
+    public String serverIp = "asmp.cc";
 
 
     public static void register() {
@@ -126,7 +128,13 @@ public class ModConfig implements ConfigData {
             config.shopRoute = json.get("shopRoute").getAsString();
             config.deleteRoute = json.get("deleteRoute").getAsString();
 
-            config.configVersion = remoteConfigVersion;
+            if(json.get("serverIp").getAsString() == null) {
+                config.serverIp = json.get("serverIp").getAsString();
+            }
+
+            if(json.get("shouldUpgradeVersion").getAsBoolean()) {
+                config.configVersion = remoteConfigVersion;
+            }
             holder.save();
 
             Utils.debug("Saved config: " + json);
