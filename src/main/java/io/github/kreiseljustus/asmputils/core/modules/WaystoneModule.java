@@ -3,7 +3,6 @@ package io.github.kreiseljustus.asmputils.core.modules;
 import io.github.kreiseljustus.asmputils.Asmputils;
 import io.github.kreiseljustus.asmputils.core.Sender;
 import io.github.kreiseljustus.asmputils.core.Utils;
-import io.github.kreiseljustus.asmputils.core.IModule;
 import io.github.kreiseljustus.asmputils.core.data.WaystoneDataHolder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;

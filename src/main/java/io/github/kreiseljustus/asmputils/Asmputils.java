@@ -1,8 +1,8 @@
 package io.github.kreiseljustus.asmputils;
 
-import com.nimbusds.common.contenttype.ContentType;
+import io.github.kreiseljustus.asmputils.config.ModConfig;
 import io.github.kreiseljustus.asmputils.core.*;
-import io.github.kreiseljustus.asmputils.core.data.ShopDataManager;
+import io.github.kreiseljustus.asmputils.core.modules.IModule;
 import io.github.kreiseljustus.asmputils.core.modules.commands.CommandsModule;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ServerValidator;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ShopModule;
@@ -15,7 +15,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.ChunkPos;
 
-import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

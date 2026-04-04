@@ -1,4 +1,4 @@
-package io.github.kreiseljustus.asmputils.core;
+package io.github.kreiseljustus.asmputils.core.modules;
 
 import net.minecraft.util.math.ChunkPos;
 

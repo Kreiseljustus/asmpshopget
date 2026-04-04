@@ -1,4 +1,4 @@
-package io.github.kreiseljustus.asmputils;
+package io.github.kreiseljustus.asmputils.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

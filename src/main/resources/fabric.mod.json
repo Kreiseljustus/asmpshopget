@@ -15,7 +15,7 @@
   "entrypoints": {
     "client": ["io.github.kreiseljustus.asmputils.Asmputils"],
     "modmenu": [
-      "io.github.kreiseljustus.asmputils.ModMenu"
+      "io.github.kreiseljustus.asmputils.config.ModMenu"
     ]
   },
 

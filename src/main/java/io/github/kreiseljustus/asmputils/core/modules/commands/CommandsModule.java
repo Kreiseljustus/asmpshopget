@@ -1,6 +1,6 @@
 package io.github.kreiseljustus.asmputils.core.modules.commands;
 
-import io.github.kreiseljustus.asmputils.core.IModule;
+import io.github.kreiseljustus.asmputils.core.modules.IModule;
 import io.github.kreiseljustus.asmputils.core.modules.commands.browser.BrowserCommand;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;

@@ -1,6 +1,6 @@
 package io.github.kreiseljustus.asmputils.core.modules.waypoints;
 
-import io.github.kreiseljustus.asmputils.core.IModule;
+import io.github.kreiseljustus.asmputils.core.modules.IModule;
 import io.github.kreiseljustus.asmputils.core.Utils;
 import net.minecraft.util.math.ChunkPos;
 

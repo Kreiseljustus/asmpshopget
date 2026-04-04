@@ -3,7 +3,7 @@ package io.github.kreiseljustus.asmputils.core.modules.shop;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import io.github.kreiseljustus.asmputils.Asmputils;
-import io.github.kreiseljustus.asmputils.ModConfig;
+import io.github.kreiseljustus.asmputils.config.ModConfig;
 import io.github.kreiseljustus.asmputils.core.Utils;
 import io.github.kreiseljustus.asmputils.core.data.ShopDataHolder;
 import org.jetbrains.annotations.NotNull;

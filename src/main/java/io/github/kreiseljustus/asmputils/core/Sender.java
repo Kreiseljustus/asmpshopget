@@ -2,6 +2,7 @@ package io.github.kreiseljustus.asmputils.core;
 
 import com.google.gson.Gson;
 import io.github.kreiseljustus.asmputils.*;
+import io.github.kreiseljustus.asmputils.config.ModConfig;
 import io.github.kreiseljustus.asmputils.core.data.*;
 import io.github.kreiseljustus.asmputils.core.modules.WaystoneModule;
 import org.apache.http.client.methods.HttpPost;

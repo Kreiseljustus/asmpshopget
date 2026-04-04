@@ -1,4 +1,4 @@
-package io.github.kreiseljustus.asmputils;
+package io.github.kreiseljustus.asmputils.core.modules.waypoints;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;

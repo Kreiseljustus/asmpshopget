@@ -1,7 +1,7 @@
 package io.github.kreiseljustus.asmputils.core.modules.shop;
 
 import io.github.kreiseljustus.asmputils.*;
-import io.github.kreiseljustus.asmputils.core.IModule;
+import io.github.kreiseljustus.asmputils.core.modules.IModule;
 import io.github.kreiseljustus.asmputils.core.Sender;
 import io.github.kreiseljustus.asmputils.core.Utils;
 import io.github.kreiseljustus.asmputils.core.data.ShopDataHolder;

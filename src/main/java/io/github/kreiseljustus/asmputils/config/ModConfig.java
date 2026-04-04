@@ -1,4 +1,4 @@
-package io.github.kreiseljustus.asmputils;
+package io.github.kreiseljustus.asmputils.config;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
