@@ -38,8 +38,6 @@ public class BrowserCommand implements ICommand {
     public static int refreshRemSeconds = 0;
     public static int refreshRemMinutes = 0;
 
-    private static String currentSearchInput = null;
-
     private ScheduledFuture<?> cooldownTask;
 
     @Override
@@ -93,7 +91,10 @@ public class BrowserCommand implements ICommand {
             client.execute(() -> {
                 BrowserScreenHandler handler = new BrowserScreenHandler(0, client.player.getInventory(), inventory,
                         (slotIndex) -> {
+                            if (slotIndex < 0 || slotIndex >= 54) return;
                             if (slotIndex == 45 || slotIndex == 53) return;
+
+                            //I don't like switch (should use it though)
 
                             if (slotIndex == 46) {
                                 currentDimensionFilter = (currentDimensionFilter + 1) % 3;

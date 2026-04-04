@@ -3,14 +3,10 @@ package io.github.kreiseljustus.asmputils.core.modules.commands.browser;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.GenericContainerScreenHandler;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -28,9 +24,8 @@ public class BrowserScreenHandler extends GenericContainerScreenHandler {
 
     @Override
     public void onSlotClick(int slotIndex, int button, SlotActionType actionType, PlayerEntity player) {
-        if (slotIndex >= 0 && slotIndex < inv.size()) {
-            onSlotClick.accept(slotIndex);
-        }
+        if (slotIndex < 0 || slotIndex >= inv.size()) return;
+        onSlotClick.accept(slotIndex);
     }
 
     @Override
