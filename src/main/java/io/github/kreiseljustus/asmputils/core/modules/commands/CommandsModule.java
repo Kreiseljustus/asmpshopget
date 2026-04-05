@@ -35,6 +35,8 @@ public class CommandsModule implements IModule {
         commands.add(new ShopsiteCommand());
         commands.add(new EvalCommand());
         commands.add(new BrowserCommand());
+        commands.add(new WikiCommand());
+        commands.add(new MapCommand());
 
         openShopBrowser = Utils.registerKeyBind("openShopBrowser", GLFW.GLFW_KEY_UNKNOWN);
         openShopSite = Utils.registerKeyBind("openShopsite", GLFW.GLFW_KEY_UNKNOWN);

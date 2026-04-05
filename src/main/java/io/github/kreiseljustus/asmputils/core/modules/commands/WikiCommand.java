@@ -12,10 +12,10 @@ import java.util.concurrent.TimeUnit;
 
 import static io.github.kreiseljustus.asmputils.Asmputils.tickDelay;
 
-public class ShopsiteCommand implements ICommand{
+public class WikiCommand implements ICommand{
     @Override
     public String getCommandName() {
-        return "shopsite";
+        return "wiki";
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ShopsiteCommand implements ICommand{
 
     @Override
     public int execute(CommandContext<FabricClientCommandSource> context) {
-        Utils.openLinkWithConfirm("https://asmp.mia.jetzt/");
+        Utils.openLinkWithConfirm("https://atriocsmp.gitbook.io/wiki");
         return 0;
     }
 }

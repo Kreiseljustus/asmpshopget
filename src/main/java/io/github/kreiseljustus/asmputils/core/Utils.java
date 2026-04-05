@@ -3,9 +3,15 @@ package io.github.kreiseljustus.asmputils.core;
 import io.github.kreiseljustus.asmputils.Asmputils;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
+import net.minecraft.util.Util;
+
+import java.util.concurrent.TimeUnit;
+
+import static io.github.kreiseljustus.asmputils.Asmputils.tickDelay;
 
 
 public class Utils {
@@ -65,5 +71,21 @@ public class Utils {
      */
     public static KeyBinding registerKeyBind(String translationKey, int keycode) {
         return KeyBindingHelper.registerKeyBinding(new KeyBinding("key.asmputils." + translationKey, keycode, "category.asmputils"));
+    }
+
+    public static void openLinkWithConfirm(String link) {
+        tickDelay.schedule(() -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+            client.execute(() -> {
+                client.setScreen(new ConfirmLinkScreen(confirmed -> {
+                    if (confirmed) {
+                        Util.getOperatingSystem().open(link);
+                    } else {
+                        Utils.debug("User cancelled");
+                    }
+                    client.setScreen(null);
+                }, link, true));
+            });
+        }, 50, TimeUnit.MILLISECONDS);
     }
 }

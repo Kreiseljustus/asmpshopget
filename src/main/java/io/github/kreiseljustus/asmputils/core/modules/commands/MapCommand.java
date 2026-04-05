@@ -4,18 +4,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.kreiseljustus.asmputils.core.Utils;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
-import net.minecraft.util.Util;
 
-import java.util.concurrent.TimeUnit;
-
-import static io.github.kreiseljustus.asmputils.Asmputils.tickDelay;
-
-public class ShopsiteCommand implements ICommand{
+public class MapCommand implements ICommand{
     @Override
     public String getCommandName() {
-        return "shopsite";
+        return "map";
     }
 
     @Override
@@ -25,7 +18,7 @@ public class ShopsiteCommand implements ICommand{
 
     @Override
     public int execute(CommandContext<FabricClientCommandSource> context) {
-        Utils.openLinkWithConfirm("https://asmp.mia.jetzt/");
+        Utils.openLinkWithConfirm("https://map.asmp.cc/");
         return 0;
     }
 }
