@@ -17,6 +17,7 @@ import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -128,7 +129,7 @@ public class BrowserCommand implements ICommand {
                             } else if (slotIndex == 50) {
                                 pageIndex++;
                             } else if (slotIndex == 51) {
-                                currentSortingIndex = (currentSortingIndex + 1) % 3;
+                                currentSortingIndex = (currentSortingIndex + 1) % 4;
                                 inventory.setStack(51, buildSorting());
                             } else if (slotIndex == 52) {
                                 inventory.setStack(52, buildRefresh());
@@ -211,6 +212,8 @@ public class BrowserCommand implements ICommand {
             case 0 -> Comparator.comparingDouble(s -> s.price);
             case 1 -> Comparator.comparingDouble((ShopDataHolder s) -> s.price).reversed();
             case 2 -> Comparator.comparingInt((ShopDataHolder s) -> s.amount).reversed();
+            case 3 -> Comparator.comparing((ShopDataHolder s) -> s.updateTime,
+                    Comparator.nullsLast(Comparator.reverseOrder()));
             default -> Comparator.comparingDouble(s -> s.price);
         };
         filtered.sort(comparator);
@@ -266,6 +269,12 @@ public class BrowserCommand implements ICommand {
             };
             lore.add(Text.literal("Dimension: " + dimText).styled(s -> s.withColor(Formatting.DARK_PURPLE).withItalic(false)));
             lore.add(Text.literal("Position: " + shop.position[0] + ", " + shop.position[1] + ", " + shop.position[2]).styled(s -> s.withColor(Formatting.GRAY).withItalic(false)));
+
+            String formattedTime = shop.updateTime != null
+                    ? shop.updateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
+                    : "Unknown";
+
+            lore.add(Text.literal("Last update: " + formattedTime).styled(s -> s.withColor(Formatting.GRAY).withItalic(false)));
             lore.add(Text.literal("Click to add Waypoint!").styled(s -> s.withColor(Formatting.DARK_GREEN).withItalic(true).withBold(true)));
 
             stack.set(DataComponentTypes.CUSTOM_NAME,

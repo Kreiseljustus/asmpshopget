@@ -1,6 +1,6 @@
 package io.github.kreiseljustus.asmputils.core;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import io.github.kreiseljustus.asmputils.*;
 import io.github.kreiseljustus.asmputils.config.ModConfig;
 import io.github.kreiseljustus.asmputils.core.data.*;
@@ -11,12 +11,26 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Sender {
     private static ModConfig config = Asmputils.s_Config;
-    static Gson gson = new Gson();
+    static Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>)
+                    (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
+            .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>)
+                    (json, typeOfT, context) -> {
+                        String str = json.getAsString();
+                        if (str.endsWith("Z")) {
+                            return OffsetDateTime.parse(str).toLocalDateTime();
+                        }
+                        return LocalDateTime.parse(str, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss[.SSSSSSSSS][.SSSSSS][.SSS]"));
+                    })
+            .create();
 
     public static void sendDeleteRequest(ShopDataHolder shop) {
         sendDeleteRequest(shop, null);

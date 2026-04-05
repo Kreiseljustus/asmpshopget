@@ -97,8 +97,8 @@ public class BrowserGUI {
         ItemStack sorting = switch(currentSortingIndex) {
             case 0 -> new ItemStack(Items.GOLD_NUGGET);
             case 1 -> new ItemStack(Items.GOLD_BLOCK);
-            case 2 -> new ItemStack(Items.CLOCK);
-            case 3 -> new ItemStack(Items.CHEST);
+            case 2 -> new ItemStack(Items.CHEST);
+            case 3 -> new ItemStack(Items.CLOCK);
             default -> null;
         };
 

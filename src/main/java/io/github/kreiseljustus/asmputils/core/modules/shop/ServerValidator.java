@@ -1,7 +1,7 @@
 package io.github.kreiseljustus.asmputils.core.modules.shop;
 
 import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
+import com.google.gson.*;
 import io.github.kreiseljustus.asmputils.Asmputils;
 import io.github.kreiseljustus.asmputils.config.ModConfig;
 import io.github.kreiseljustus.asmputils.core.Utils;
@@ -14,6 +14,9 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +27,18 @@ import java.util.stream.Collectors;
 public class ServerValidator {
 
     //Put in Utils?
-    private static final Gson gson = new Gson();
+    static Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>)
+                    (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
+            .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>)
+                    (json, typeOfT, context) -> {
+                        String str = json.getAsString();
+                        if (str.endsWith("Z")) {
+                            return OffsetDateTime.parse(str).toLocalDateTime();
+                        }
+                        return LocalDateTime.parse(str, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss[.SSSSSSSSS][.SSSSSS][.SSS]"));
+                    })
+            .create();
 
     //Might move this?
     public static List<ShopDataHolder> s_ServerShops = new ArrayList<>();
@@ -69,6 +83,7 @@ public class ServerValidator {
                     ServerValidator.getServerData();
                 } catch (Exception e) {
                     Utils.debug("This will crash minecraft");
+                    e.printStackTrace();
                 }
 
                 try {
