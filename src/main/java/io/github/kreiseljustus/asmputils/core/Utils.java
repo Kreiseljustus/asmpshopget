@@ -1,6 +1,7 @@
 package io.github.kreiseljustus.asmputils.core;
 
 import io.github.kreiseljustus.asmputils.Asmputils;
+import io.github.kreiseljustus.asmputils.config.Constants;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
@@ -31,7 +32,7 @@ public class Utils {
      * if debug mode is enabled in the mod options
      */
     public static void debug(String message) {
-        System.out.println(message);
+        System.out.println("[ASMP Utils " + Constants.VERSION + " :" + message);
         if(!Asmputils.s_Config.enableDebugMode || !Asmputils.s_Config.enable || Asmputils.s_Player == null) return;
         Asmputils.s_Player.sendMessage(Text.of("[ASMP Utils] " + message), false);
     }

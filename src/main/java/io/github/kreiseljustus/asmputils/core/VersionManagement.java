@@ -68,6 +68,7 @@ public class VersionManagement {
                 return version;
             }
         } catch(Exception e) {
+            e.printStackTrace();
             Utils.debug("Failed to fetch version! Please report this to Crisel on discord");
             return null;
         }
