@@ -1,12 +1,15 @@
 package io.github.kreiseljustus.asmputils.core.modules.commands.browser;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.kreiseljustus.asmputils.core.Utils;
 import io.github.kreiseljustus.asmputils.core.data.ShopDataHolder;
+import io.github.kreiseljustus.asmputils.core.modules.commands.CommandsModule;
 import io.github.kreiseljustus.asmputils.core.modules.commands.ICommand;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ServerValidator;
 import io.github.kreiseljustus.asmputils.core.modules.waypoints.WaypointModule;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.DataComponentTypes;
@@ -50,17 +53,36 @@ public class BrowserCommand implements ICommand {
     public LiteralArgumentBuilder<FabricClientCommandSource> build(LiteralArgumentBuilder<FabricClientCommandSource> builder) {
         return builder
                 .executes(this::executeChecked)
+                .then(ClientCommandManager.argument("searchTerm", StringArgumentType.greedyString())
+                        .executes(this::executeChecked)
                 );
     }
 
     @Override
-    public int execute(CommandContext<FabricClientCommandSource> context) {
+    public int executeChecked(CommandContext<FabricClientCommandSource> context) {
+        if (!CommandsModule.enabled) {
+            context.getSource().sendFeedback(
+                    Text.literal("The commands module is disabled! Enable it in the config")
+                            .formatted(Formatting.RED));
+            return 1;
+        }
+        try {
+            searchString = StringArgumentType.getString(context, "searchTerm");
+        } catch (IllegalArgumentException e) {
+            searchString = null;
+        }
         s_ServerShops = ServerValidator.s_ServerShops;
         pageIndex = 1;
+        openBrowserScreen(MinecraftClient.getInstance());
+        return 0;
+    }
+
+    @Override
+    public int execute(CommandContext<FabricClientCommandSource> context) {
         searchString = null;
-        MinecraftClient client = MinecraftClient.getInstance();
-        openBrowserScreen(client);
-        Utils.debug("Done running /browse");
+        s_ServerShops = ServerValidator.s_ServerShops;
+        pageIndex = 1;
+        openBrowserScreen(MinecraftClient.getInstance());
         return 0;
     }
 
