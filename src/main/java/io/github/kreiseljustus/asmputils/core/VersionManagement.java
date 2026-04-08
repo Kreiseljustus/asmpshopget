@@ -19,14 +19,18 @@ public class VersionManagement {
     public static boolean s_UsingLatestVersion;
     private static boolean s_WarningGiven = false;
 
-    public static void checkAndWarnVersion(PlayerEntity player) {
+    private static boolean s_hasGithubRelease = false;
+
+    public static void checkAndWarnVersion() {
         if(!isOldVersion()) {s_UsingLatestVersion = true; Utils.debug("Using latest version!"); return;}
         if(s_WarningGiven) return;
-        player.sendMessage(Text.of(Text.literal("[ASMP Utils] Your version is outdated! You won't contribute any data until the mod is updated.")
-                .formatted(Formatting.RED)), false);
+
+        Utils.debug("[ASMP Utils] Your version is outdated! You won't contribute any data until the mod is updated.");
 
         s_UsingLatestVersion = false;
         s_WarningGiven = true;
+
+        
     }
 
     public static boolean isOldVersion() {
@@ -83,5 +87,9 @@ public class VersionManagement {
             parts[index++] = Integer.parseInt(matcher.group());
         }
         return parts;
+    }
+
+    public static boolean hasGithubRelease() {
+        return s_hasGithubRelease;
     }
 }

@@ -52,11 +52,9 @@ public class Asmputils implements ClientModInitializer {
             @Override
             public void run() {
                 MinecraftClient client = MinecraftClient.getInstance();
-                if (client == null || client.player == null) return;
+                if (client == null) return;
                 if (!s_Config.enable) return;
-                if (!s_Config.allowOnAllServers && !Utils.onASMP()) return;
-
-                VersionManagement.checkAndWarnVersion(client.player);
+                VersionManagement.checkAndWarnVersion();
             }
         },0,300_000);
 
@@ -86,8 +84,9 @@ public class Asmputils implements ClientModInitializer {
 
         s_Player = client.player;
 
+        //Why check again, already checked in OnInitializeClient()
         if(!checkedVersionOnStartup) {
-            VersionManagement.checkAndWarnVersion(client.player);
+            VersionManagement.checkAndWarnVersion();
 
             checkedVersionOnStartup = true;
         }
