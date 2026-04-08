@@ -32,6 +32,10 @@ Player made shops are tracked through the mod and sent to a webserver which disp
 ![Image of shopsite](./repo-images/shopsite.png)
 For more information see [asmp-shopsite](https://github.com/Kreiseljustus/asmp-shopsite)
 
+### Ingame shop browser
+<img width="1143" height="675" alt="grafik" src="https://github.com/user-attachments/assets/ecff139a-b4b9-4571-b90e-2892f2289d08" />
+
+
 ### Waystone tracking
 Waystones by players are tracked (basically) the same way as [shops](#player-shop-tracking) 
 
