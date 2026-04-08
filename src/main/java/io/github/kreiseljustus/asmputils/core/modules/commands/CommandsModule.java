@@ -16,7 +16,7 @@ import java.util.List;
 
 public class CommandsModule implements IModule {
 
-    boolean enabled = true;
+    public static boolean enabled = true;
 
     public static List<ICommand> commands = new LinkedList<>();
 
@@ -41,18 +41,9 @@ public class CommandsModule implements IModule {
         openShopBrowser = Utils.registerKeyBind("openShopBrowser", GLFW.GLFW_KEY_UNKNOWN);
         openShopSite = Utils.registerKeyBind("openShopsite", GLFW.GLFW_KEY_UNKNOWN);
 
-        for(ICommand command : commands) {
+        for (ICommand command : commands) {
             ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-                dispatcher.register(command.build(ClientCommandManager.literal(command.getCommandName()))
-                        .executes(context -> {
-
-                            if(!enabled) {
-                                context.getSource().sendFeedback(Text.literal("The commands module is disabled! Enable it in the config").formatted(Formatting.RED));
-                                return 1;
-                            }
-
-                            return command.execute(context);
-                        }));
+                dispatcher.register(command.build(ClientCommandManager.literal(command.getCommandName())));
             });
         }
     }

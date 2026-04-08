@@ -21,7 +21,7 @@ public class EvalCommand implements ICommand{
     @Override
     public LiteralArgumentBuilder<FabricClientCommandSource> build(LiteralArgumentBuilder<FabricClientCommandSource> builder) {
         return builder.then(
-                argument("expr", StringArgumentType.greedyString()).executes(this::execute)
+                argument("expr", StringArgumentType.greedyString()).executes(this::executeChecked)
         );
     }
 

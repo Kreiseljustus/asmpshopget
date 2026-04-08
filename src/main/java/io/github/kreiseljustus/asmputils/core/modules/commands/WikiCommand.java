@@ -20,7 +20,7 @@ public class WikiCommand implements ICommand{
 
     @Override
     public LiteralArgumentBuilder<FabricClientCommandSource> build(LiteralArgumentBuilder<FabricClientCommandSource> builder) {
-        return builder;
+        return builder.executes(this::executeChecked);
     }
 
     @Override
