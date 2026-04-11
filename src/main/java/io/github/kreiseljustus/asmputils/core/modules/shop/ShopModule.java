@@ -1,6 +1,7 @@
 package io.github.kreiseljustus.asmputils.core.modules.shop;
 
 import io.github.kreiseljustus.asmputils.*;
+import io.github.kreiseljustus.asmputils.core.ModrinthVersionManagement;
 import io.github.kreiseljustus.asmputils.core.modules.IModule;
 import io.github.kreiseljustus.asmputils.core.Sender;
 import io.github.kreiseljustus.asmputils.core.Utils;
@@ -143,7 +144,9 @@ public class ShopModule implements IModule{
         if(!enabled) return;
 
         if(Asmputils.s_TicksInASMPServer % Asmputils.s_Config.ticksBetweenSends == 0) {
-            Sender.sendCachedShopData();
+            if(!ModrinthVersionManagement.updateAvailable) {
+                Sender.sendCachedShopData();
+            } else Utils.debug("Update available, not sending possibly invalid data!");
             ShopDataManager.s_CachedShops.clear();
         }
     }

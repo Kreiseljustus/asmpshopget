@@ -23,6 +23,9 @@ public class ModConfig implements ConfigData {
     public static final int CURRENT_CONFIG_VERSION = 2;
 
     @ConfigEntry.Category("General")
+    public boolean showUpdateScreen = true;
+
+    @ConfigEntry.Category("General")
     @ConfigEntry.Gui.Tooltip
     public boolean enable = true;
     @ConfigEntry.Category("Tracking")

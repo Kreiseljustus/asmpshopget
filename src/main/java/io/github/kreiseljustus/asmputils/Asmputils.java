@@ -23,10 +23,7 @@ public class Asmputils implements ClientModInitializer {
     public static ModConfig s_Config;
     public static PlayerEntity s_Player;
 
-    Timer timer = new Timer();
     public static int s_TicksInASMPServer = 0;
-
-    boolean checkedVersionOnStartup = false;
 
     ChunkPos lastChunkPosition = null;
 
@@ -48,16 +45,16 @@ public class Asmputils implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
         ClientLifecycleEvents.CLIENT_STOPPING.register(this::onClientStop);
 
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                MinecraftClient client = MinecraftClient.getInstance();
-                if (client == null) return;
-                if (!s_Config.enable) return;
-                VersionManagement.checkAndWarnVersion();
-            }
-        },0,300_000);
-
+        ModrinthVersionManagement.checkUpdateAvailable().thenAccept(updateAvailable -> {
+           if(updateAvailable) {
+               Utils.debug("Update available onInitializeClient()");
+               MinecraftClient.getInstance().execute(() -> {
+                   ModrinthVersionManagement.updateAvailable = true;
+               });
+           } else {
+               Utils.debug("No update available on Modrinth");
+           }
+        });
         Thread fetcherThread = ServerValidator.getFetcherThread();
         fetcherThread.start();
 
@@ -84,13 +81,6 @@ public class Asmputils implements ClientModInitializer {
 
         s_Player = client.player;
 
-        //Why check again, already checked in OnInitializeClient()
-        if(!checkedVersionOnStartup) {
-            VersionManagement.checkAndWarnVersion();
-
-            checkedVersionOnStartup = true;
-        }
-
         if(s_Config.ticksBetweenSends < 400) s_Config.ticksBetweenSends = 600;
 
         for(IModule module : modules) {
@@ -107,11 +97,6 @@ public class Asmputils implements ClientModInitializer {
             }
             lastChunkPosition = currentChunkPosition;
         }
-
-        if(s_TicksInASMPServer % s_Config.ticksBetweenSends == 0) {
-            if(!VersionManagement.s_UsingLatestVersion) {Utils.debug("Discarding- not up-to date!"); s_TicksInASMPServer++; return;}
-        }
-
         s_TicksInASMPServer++;
     }
 

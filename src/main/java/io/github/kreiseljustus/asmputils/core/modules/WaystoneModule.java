@@ -1,6 +1,7 @@
 package io.github.kreiseljustus.asmputils.core.modules;
 
 import io.github.kreiseljustus.asmputils.Asmputils;
+import io.github.kreiseljustus.asmputils.core.ModrinthVersionManagement;
 import io.github.kreiseljustus.asmputils.core.Sender;
 import io.github.kreiseljustus.asmputils.core.Utils;
 import io.github.kreiseljustus.asmputils.core.data.WaystoneDataHolder;
@@ -101,9 +102,10 @@ public class WaystoneModule implements IModule {
         if(!enabled) return;
 
         waystoneTick(MinecraftClient.getInstance());
-
         if(Asmputils.s_TicksInASMPServer % Asmputils.s_Config.ticksBetweenSends == 0) {
-            Sender.sendCachedWaystoneData();
+            if(!ModrinthVersionManagement.updateAvailable) {
+                Sender.sendCachedWaystoneData();
+            } else Utils.debug("Update available, not sending possibly invalid data!");
             WaystoneModule.s_CachedWaystones.clear();
         }
     }

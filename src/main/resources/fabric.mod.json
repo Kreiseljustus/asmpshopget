@@ -19,6 +19,15 @@
     ]
   },
 
+  "custom": {
+    "modrinth": {
+      "id": "9qOjeThL",
+      "updates": "https://api.modrinth.com/v2/project/9qOjeThL/version"
+    }
+  },
+
+  "mixins": ["asmputils.mixins.json"],
+
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",

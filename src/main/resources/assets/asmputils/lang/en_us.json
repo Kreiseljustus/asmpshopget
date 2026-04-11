@@ -46,6 +46,7 @@
   "text.autoconfig.asmpshopget.option.trackShops.@Tooltip": "Enable shop tracking. If disabled only waystones will be sent (if that isnt enabled too)",
   "text.autoconfig.asmpshopget.option.enable.@Tooltip": "Enables or disables the whole mod.",
   "text.autoconfig.asmpshopget.option.enableWaypointFeature.@Tooltip": "This involves a local web server being hosted on a separate thread",
+  "text.autoconfig.asmpshopget.option.showUpdateScreen": "Show update screen",
 
   "key.asmputils.openShopBrowser": "Open Shop Browser",
   "key.asmputils.openShopsite": "Open Shopsite"
