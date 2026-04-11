@@ -122,7 +122,9 @@ public class ShopModule implements IModule{
             if(foundShops.contains(expectedShop)) continue;
 
             //Send update to server
-            Sender.sendDeleteRequest(expectedShop);
+            if(!ModrinthVersionManagement.updateAvailable) {
+                Sender.sendDeleteRequest(expectedShop);
+            }
         }
 
         foundShops.clear();
