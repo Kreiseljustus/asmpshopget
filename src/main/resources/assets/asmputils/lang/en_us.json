@@ -52,6 +52,7 @@
   "text.autoconfig.asmpshopget.option.enable.@Tooltip": "Enables or disables the whole mod.",
   "text.autoconfig.asmpshopget.option.enableWaypointFeature.@Tooltip": "This involves a local web server being hosted on a separate thread",
   "text.autoconfig.asmpshopget.option.showUpdateScreen": "Show update screen",
+  "text.autoconfig.asmpshopget.option.verboseLogging": "Verbose Logging",
 
   "key.asmputils.openShopBrowser": "Open Shop Browser",
   "key.asmputils.openShopsite": "Open Shopsite"

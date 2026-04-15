@@ -35,7 +35,7 @@ public class Sender {
                 post.setHeader("Content-Type", "application/json");
 
                 client.execute(post);
-                Utils.debug("Sent delete request for " + requestBody);
+                Utils.debug("Sent delete request for " + requestBody, true);
             } catch (Exception e) {
                 e.printStackTrace();
                 Utils.debug(e.getMessage());
@@ -76,7 +76,7 @@ public class Sender {
         new Thread(() -> {
             try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
                 StringEntity postString = new StringEntity(Utils.s_Gson.toJson(packet), ContentType.APPLICATION_JSON);
-                Utils.debug(Utils.s_Gson.toJson(packet));
+                Utils.debug(Utils.s_Gson.toJson(packet), true);
                 post.setEntity(postString);
                 post.setHeader("Content-Type", "application/json");
 

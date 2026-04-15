@@ -54,7 +54,7 @@ public class ShopModule implements IModule{
             SignBlockEntity sign = (SignBlockEntity) entity;
             BlockState blockState = world.getBlockState(pos);
 
-            Utils.debug("Block at pos: " + pos + " is " + blockState.getBlock().getTranslationKey());
+            Utils.debug("Block at pos: " + pos + " is " + blockState.getBlock().getTranslationKey(), true);
 
             if (!(blockState.getBlock() instanceof SignBlock || blockState.getBlock() instanceof WallSignBlock)) {
                 continue;
@@ -72,7 +72,7 @@ public class ShopModule implements IModule{
             if(sellBuyOOS.isEmpty()) continue;
 
             if (!(sellBuyOOS.contains("Selling") || sellBuyOOS.contains("Buying") || sellBuyOOS.contains("Out of Stock"))) {
-                Utils.debug("not selling, buying, oos");
+                Utils.debug("not selling, buying, oos", true);
                 continue;
             }
 
@@ -97,11 +97,11 @@ public class ShopModule implements IModule{
             try {
                 amount = matcher.find() ? Integer.parseInt(matcher.group(2)) : 0;
             } catch(Exception e) {
-                Utils.debug(e.getMessage());
+                Utils.debug(e.getMessage(), true);
             }
 
-            Utils.debug(world.getDimensionEntry().getIdAsString());
-            Utils.debug(String.valueOf(dimension));
+            Utils.debug(world.getDimensionEntry().getIdAsString(), true);
+            Utils.debug(String.valueOf(dimension),true);
 
             if(!price.contains(" each")) continue;
 

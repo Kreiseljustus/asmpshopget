@@ -10,13 +10,15 @@ import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static io.github.kreiseljustus.asmputils.Asmputils.tickDelay;
+import static io.github.kreiseljustus.asmputils.Asmputils.*;
 
 
 public class Utils {
@@ -48,10 +50,18 @@ public class Utils {
      * Prints to console and also tries to send the player a message
      * if debug mode is enabled in the mod options
      */
-    public static void debug(String message) {
+    public static void debug(String message, boolean verbose) {
         System.out.println("[ASMP Utils " + Constants.VERSION + "]: " + message);
         if(!Asmputils.s_Config.enableDebugMode || !Asmputils.s_Config.enable || Asmputils.s_Player == null) return;
+        if(verbose && !s_Config.verboseLogging) {
+            s_Player.sendMessage(Text.of("[ASMP Utils] Verbose message (see log)"), false);
+            return;
+        }
         Asmputils.s_Player.sendMessage(Text.of("[ASMP Utils] " + message), false);
+    }
+
+    public static void debug(String message) {
+        debug(message, false);
     }
 
     /**

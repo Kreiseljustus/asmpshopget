@@ -100,6 +100,8 @@ public class ModConfig implements ConfigData {
     public String statisticsRoute = "https://asmp.mia.jetzt/api/statistics";
     @ConfigEntry.Category("Dev")
     public String serverIp = "asmp.cc";
+    @ConfigEntry.Category("Dev")
+    public boolean verboseLogging = true;
 
 
     public static void register() {
