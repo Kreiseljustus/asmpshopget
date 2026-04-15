@@ -4,7 +4,7 @@ import com.google.gson.*;
 import io.github.kreiseljustus.asmputils.*;
 import io.github.kreiseljustus.asmputils.config.ModConfig;
 import io.github.kreiseljustus.asmputils.core.data.*;
-import io.github.kreiseljustus.asmputils.core.modules.WaystoneModule;
+import io.github.kreiseljustus.asmputils.core.modules.waystones.WaystoneModule;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;

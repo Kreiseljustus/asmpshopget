@@ -1,10 +1,11 @@
-package io.github.kreiseljustus.asmputils.core.modules;
+package io.github.kreiseljustus.asmputils.core.modules.waystones;
 
 import io.github.kreiseljustus.asmputils.Asmputils;
 import io.github.kreiseljustus.asmputils.core.ModrinthVersionManagement;
 import io.github.kreiseljustus.asmputils.core.Sender;
 import io.github.kreiseljustus.asmputils.core.Utils;
 import io.github.kreiseljustus.asmputils.core.data.WaystoneDataHolder;
+import io.github.kreiseljustus.asmputils.core.modules.IModule;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.ItemStack;
@@ -97,7 +98,7 @@ public class WaystoneModule implements IModule {
     }
 
     @Override
-    public void onTick(boolean enabled) {
+    public void onTick(boolean enabled, int totalTicks) {
         this.enabled = enabled;
         if(!enabled) return;
 
