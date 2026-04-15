@@ -141,7 +141,7 @@ public class ShopModule implements IModule{
     }
 
     @Override
-    public void onTick(boolean enabled) {
+    public void onTick(boolean enabled, int totalTicks) {
         this.enabled = enabled;
         if(!enabled) return;
 

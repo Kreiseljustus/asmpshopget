@@ -33,7 +33,7 @@ public class WaypointModule implements IModule {
     }
 
     @Override
-    public void onTick(boolean moduleEnabled) {
+    public void onTick(boolean moduleEnabled,int totalTicks) {
 
     }
 

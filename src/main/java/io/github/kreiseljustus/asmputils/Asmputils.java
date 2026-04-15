@@ -6,7 +6,7 @@ import io.github.kreiseljustus.asmputils.core.modules.IModule;
 import io.github.kreiseljustus.asmputils.core.modules.commands.CommandsModule;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ServerValidator;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ShopModule;
-import io.github.kreiseljustus.asmputils.core.modules.WaystoneModule;
+import io.github.kreiseljustus.asmputils.core.modules.waystones.WaystoneModule;
 import io.github.kreiseljustus.asmputils.core.modules.waypoints.WaypointModule;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
@@ -23,6 +23,7 @@ public class Asmputils implements ClientModInitializer {
     public static ModConfig s_Config;
     public static PlayerEntity s_Player;
 
+    //Change this to ticks since game start?
     public static int s_TicksInASMPServer = 0;
 
     ChunkPos lastChunkPosition = null;
@@ -85,7 +86,7 @@ public class Asmputils implements ClientModInitializer {
 
         for(IModule module : modules) {
             boolean enabled = Utils.getModuleOn(module.getModuleName());
-            module.onTick(enabled);
+            module.onTick(enabled, s_TicksInASMPServer);
         }
 
         ChunkPos currentChunkPosition = new ChunkPos(s_Player.getBlockPos());
