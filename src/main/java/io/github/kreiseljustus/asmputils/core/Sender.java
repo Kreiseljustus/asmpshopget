@@ -11,27 +11,11 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sender {
-    private static ModConfig config = Asmputils.s_Config;
-    static Gson gson = new GsonBuilder()
-            .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>)
-                    (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
-            .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>)
-                    (json, typeOfT, context) -> {
-                        String str = json.getAsString();
-                        if (str.endsWith("Z")) {
-                            return OffsetDateTime.parse(str).toLocalDateTime();
-                        }
-                        return LocalDateTime.parse(str, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss[.SSSSSSSSS][.SSSSSS][.SSS]"));
-                    })
-            .create();
 
+public class Sender {
     public static void sendDeleteRequest(ShopDataHolder shop) {
         sendDeleteRequest(shop, null);
     }
@@ -39,7 +23,7 @@ public class Sender {
     public static void sendDeleteRequest(ShopDataHolder shop, WaystoneDataHolder waystone) {
         if(shop != null && waystone != null) return;
 
-        String dataJson = shop == null ? gson.toJson(waystone) : gson.toJson(shop);
+        String dataJson = shop == null ? Utils.s_Gson.toJson(waystone) : Utils.s_Gson.toJson(shop);
 
         String requestBody = String.format("{\"type\":\"shop\",\"data\":%s}", dataJson);
 
@@ -87,8 +71,8 @@ public class Sender {
         HttpPost post = new HttpPost(config.postUrl);
         new Thread(() -> {
             try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
-                StringEntity postString = new StringEntity(gson.toJson(packet), ContentType.APPLICATION_JSON);
-                Utils.debug(gson.toJson(packet));
+                StringEntity postString = new StringEntity(Utils.s_Gson.toJson(packet), ContentType.APPLICATION_JSON);
+                Utils.debug(Utils.s_Gson.toJson(packet));
                 post.setEntity(postString);
                 post.setHeader("Content-Type", "application/json");
 

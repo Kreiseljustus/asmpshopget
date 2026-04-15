@@ -1,5 +1,6 @@
 package io.github.kreiseljustus.asmputils.core;
 
+import com.google.gson.*;
 import io.github.kreiseljustus.asmputils.Asmputils;
 import io.github.kreiseljustus.asmputils.config.Constants;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -10,12 +11,28 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 import static io.github.kreiseljustus.asmputils.Asmputils.tickDelay;
 
 
 public class Utils {
+    public static Gson s_Gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>)
+                    (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
+            .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>)
+                    (json, typeOfT, context) -> {
+                        String str = json.getAsString();
+                        if (str.endsWith("Z")) {
+                            return OffsetDateTime.parse(str).toLocalDateTime();
+                        }
+                        return LocalDateTime.parse(str, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss[.SSSSSSSSS][.SSSSSS][.SSS]"));
+                    })
+            .create();
+
     /**
      * Returns true if currently playing on the ASMP Server
      */
