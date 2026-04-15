@@ -136,6 +136,8 @@ public class ModConfig implements ConfigData {
 
             if(config.configVersion >= remoteConfigVersion) return;
 
+            //TODO: Add min mod version to update config version
+
             config.shopPostUrl = json.get("shopPostUrl").getAsString();
             config.shopGetRoute = json.get("shopGetRoute").getAsString();
             config.waystonePostUrl = json.get("waystonePostUrl").getAsString();

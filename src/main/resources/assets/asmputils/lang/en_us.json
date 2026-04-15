@@ -1,6 +1,5 @@
 {
   "text.autoconfig.asmpshopget.option.enableDebugMode": "Enable Debug Mode",
-  "text.autoconfig.asmpshopget.option.postUrl": "Server URL",
   "text.autoconfig.asmpshopget.option.ticksBetweenSends": "Ticks between sending updates",
   "text.autoconfig.asmpshopget.title": "ASMP Utils",
   "text.autoconfig.asmpshopget.option.enable": "Enable (please)",
@@ -9,15 +8,21 @@
   "text.autoconfig.asmpshopget.option.trackWaystones": "Track waytones",
   "text.autoconfig.asmpshopget.option.sendUsername": "Send Username to track mod installs",
   "text.autoconfig.asmpshopget.option.enableWaypointFeature": "Enable waypoint feature",
+  "text.autoconfig.asmpshopget.option.shopPostUrl": "Shop Url",
+  "text.autoconfig.asmpshopget.option.waystonePostUrl": "Waystone post Url",
+  "text.autoconfig.asmpshopget.option.waystoneGetUrl": "Waystone get url",
   
   "text.autoconfig.asmpshopget.option.fetcherThreadInterval": "Fetcher Thread Interval (ms)",
-  "text.autoconfig.asmpshopget.option.shopRoute": "Shop API Route",
   "text.autoconfig.asmpshopget.option.deleteRoute": "Delete API Route",
+  "text.autoconfig.asmpshopget.option.shopGetRoute": "Shop get Route",
+  "text.autoconfig.asmpshopget.option.statisticsRoute": "Statistics Route",
+  "text.autoconfig.asmpshopget.option.serverIp": "Server IP",
 
   "text.autoconfig.asmpshopget.option.enableShopModule": "Enable shop module",
   "text.autoconfig.asmpshopget.option.enableWaystoneModule": "Enable waystone module",
   "text.autoconfig.asmpshopget.option.enableWaypointModule": "Enable waypoint module",
   "text.autoconfig.asmpshopget.option.enableCommandsModule": "Enable commands module",
+  "text.autoconfig.asmpshopget.option.enableStatsModule": "Enable Statistics Module",
 
   "text.autoconfig.asmpshopget.option.enableShopModule.@Tooltip": "Module that tracks shops and sends them to the shop website",
   "text.autoconfig.asmpshopget.option.enableWaystoneModule.@Tooltip": "Module that tracks waystones and sends them to the website",
