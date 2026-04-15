@@ -1,6 +1,10 @@
 {
-    "postUrl": "https://asmp.mia.jetzt/api/post",
-    "shopRoute": "https://asmp.mia.jetzt/api/shops",
+    "shopPostUrl": "https://asmp.mia.jetzt/api/shops",
+    "shopGetRoute": "https://asmp.mia.jetzt/api/shops",
+    "waystonePostUrl": "https://asmp.mia.jetzt/api/waystones",
+    "waystoneGetUrl": "https://asmp.mia.jetzt/api/waystones",
     "deleteRoute": "https://asmp.mia.jetzt/api/delete",
-    "version": 3
+    "serverIp": "asmp.cc",
+    "shouldUpgradeVersion": true,
+    "version": 4
 }
