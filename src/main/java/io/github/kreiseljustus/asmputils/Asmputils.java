@@ -6,6 +6,7 @@ import io.github.kreiseljustus.asmputils.core.modules.IModule;
 import io.github.kreiseljustus.asmputils.core.modules.commands.CommandsModule;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ServerValidator;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ShopModule;
+import io.github.kreiseljustus.asmputils.core.modules.stats.StatModule;
 import io.github.kreiseljustus.asmputils.core.modules.waystones.WaystoneModule;
 import io.github.kreiseljustus.asmputils.core.modules.waypoints.WaypointModule;
 import net.fabricmc.api.ClientModInitializer;
@@ -62,6 +63,7 @@ public class Asmputils implements ClientModInitializer {
         modules.add(new ShopModule());
         modules.add(new WaystoneModule());
         modules.add(new WaypointModule());
+        modules.add(new StatModule());
 
 
         //Special case.

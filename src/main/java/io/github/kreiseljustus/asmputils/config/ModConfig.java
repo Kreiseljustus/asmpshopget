@@ -65,6 +65,9 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public boolean enableWaypointModule = true;
 
+    @ConfigEntry.Category("Modules")
+    public boolean enableStatsModule = true;
+
     @ConfigEntry.Category("Waypoints")
     @ConfigEntry.Gui.Tooltip
     public WaypointColorOption waypointColor = WaypointColorOption.GOLD;
