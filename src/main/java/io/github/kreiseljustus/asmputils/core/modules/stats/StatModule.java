@@ -2,7 +2,9 @@ package io.github.kreiseljustus.asmputils.core.modules.stats;
 
 import com.google.gson.JsonObject;
 import io.github.kreiseljustus.asmputils.Asmputils;
+import io.github.kreiseljustus.asmputils.core.Sender;
 import io.github.kreiseljustus.asmputils.core.Utils;
+import io.github.kreiseljustus.asmputils.core.data.StatisticsPacket;
 import io.github.kreiseljustus.asmputils.core.modules.IModule;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.MinecraftClient;
@@ -57,7 +59,10 @@ public class StatModule implements IModule {
                 processStatType(statType, stats, root);
             }
 
-            Utils.debug(root.toString());
+            StatisticsPacket packet = new StatisticsPacket(client.getSession().getUsername(), client.player.getUuid(), root.toString());
+            Sender.sendStatisticsPacket(packet);
+
+            Utils.debug("Sent statistics packet");
             currentTick = 0;
         }
         requestTimerTick++;

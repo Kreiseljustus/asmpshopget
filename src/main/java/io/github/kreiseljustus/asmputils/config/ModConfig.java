@@ -35,7 +35,11 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public boolean trackWaystones = true;
     @ConfigEntry.Category("General")
-    public String postUrl = "https://asmp.mia.jetzt/api/post";
+    public String shopPostUrl = "https://asmp.mia.jetzt/api/shops";
+    @ConfigEntry.Category("General")
+    public String waystonePostUrl = "https://asmp.mia.jetzt/api/waystones";
+    @ConfigEntry.Category("General")
+    public String waystoneGetUrl = "https://asmp.mia.jetzt/api/waystones";
     @ConfigEntry.Category("General")
     @ConfigEntry.Gui.Tooltip
     public int ticksBetweenSends = 600;
@@ -89,9 +93,11 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("Dev")
     public boolean allowOnAllServers = false;
     @ConfigEntry.Category("Dev")
-    public String shopRoute = "https://asmp.mia.jetzt/api/shops";
+    public String shopGetRoute = "https://asmp.mia.jetzt/api/shops";
     @ConfigEntry.Category("Dev")
     public String deleteRoute = "https://asmp.mia.jetzt/api/delete";
+    @ConfigEntry.Category("Dev")
+    public String statisticsRoute = "https://asmp.mia.jetzt/api/statistics";
     @ConfigEntry.Category("Dev")
     public String serverIp = "asmp.cc";
 
@@ -130,11 +136,13 @@ public class ModConfig implements ConfigData {
 
             if(config.configVersion >= remoteConfigVersion) return;
 
-            config.postUrl = json.get("postUrl").getAsString();
-            config.shopRoute = json.get("shopRoute").getAsString();
+            config.shopPostUrl = json.get("shopPostUrl").getAsString();
+            config.shopGetRoute = json.get("shopGetRoute").getAsString();
+            config.waystonePostUrl = json.get("waystonePostUrl").getAsString();
+            config.waystoneGetUrl = json.get("waystoneGetUrl").getAsString();
             config.deleteRoute = json.get("deleteRoute").getAsString();
 
-            if(json.get("serverIp").getAsString() == null) {
+            if(json.get("serverIp").getAsString() != null) {
                 config.serverIp = json.get("serverIp").getAsString();
             }
 
@@ -148,6 +156,7 @@ public class ModConfig implements ConfigData {
         } catch (Exception e) {
             Utils.debug("Something went wrong while trying to get the current config!");
             e.printStackTrace();
+            Utils.debug(e.getMessage());
         }
     }
 }

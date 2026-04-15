@@ -49,10 +49,10 @@ public class Sender {
             Utils.debug("No cached data to send");
             return;
         }
-        if(s_Config.postUrl == null || s_Config.postUrl.isEmpty()) return;
+        if(s_Config.shopPostUrl == null || s_Config.shopPostUrl.isEmpty()) return;
 
         ShopUploadPacket packet = new ShopUploadPacket(shops);
-        sendDataFromClient(packet);
+        sendDataFromClient(packet, s_Config.shopPostUrl);
     }
 
     public static void sendCachedWaystoneData() {
@@ -61,14 +61,18 @@ public class Sender {
             Utils.debug("No cached data to send");
             return;
         }
-        if(s_Config.postUrl == null || s_Config.postUrl.isEmpty()) return;
+        if(s_Config.waystonePostUrl == null || s_Config.waystonePostUrl.isEmpty()) return;
 
         WaystoneUploadPacket packet = new WaystoneUploadPacket(waystones);
-        sendDataFromClient(packet);
+        sendDataFromClient(packet, s_Config.waystonePostUrl);
     }
 
-    public static <T> void sendDataFromClient(T packet){
-        HttpPost post = new HttpPost(s_Config.postUrl);
+    public static void sendStatisticsPacket(StatisticsPacket packet) {
+        sendDataFromClient(packet, s_Config.statisticsRoute);
+    }
+
+    private static <T> void sendDataFromClient(T packet, String url){
+        HttpPost post = new HttpPost(url);
         new Thread(() -> {
             try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
                 StringEntity postString = new StringEntity(Utils.s_Gson.toJson(packet), ContentType.APPLICATION_JSON);
@@ -79,7 +83,6 @@ public class Sender {
                 client.execute(post);
                 Utils.debug("Sent data packet.");
             } catch (Exception e) {
-                e.printStackTrace();
                 Utils.debug(e.getMessage());
             }
         }).start();

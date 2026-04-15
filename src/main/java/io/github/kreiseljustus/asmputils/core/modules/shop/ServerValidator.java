@@ -109,7 +109,7 @@ public class ServerValidator {
      * Downloads the servers shops and saves them in {@code s_ServerShops}
      */
     private static void getServerData() {
-        String shopJson = downloadUrl(Asmputils.s_Config.shopRoute);
+        String shopJson = downloadUrl(Asmputils.s_Config.shopGetRoute);
 
         Type shopListType = new TypeToken<List<ShopDataHolder>>() {}.getType();
         s_ServerShops = gson.fromJson(shopJson, shopListType);
