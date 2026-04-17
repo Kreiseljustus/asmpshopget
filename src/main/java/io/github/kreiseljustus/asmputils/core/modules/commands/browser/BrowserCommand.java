@@ -9,6 +9,7 @@ import io.github.kreiseljustus.asmputils.core.modules.commands.CommandsModule;
 import io.github.kreiseljustus.asmputils.core.modules.commands.ICommand;
 import io.github.kreiseljustus.asmputils.core.modules.shop.ServerValidator;
 import io.github.kreiseljustus.asmputils.core.modules.waypoints.WaypointModule;
+import io.github.kreiseljustus.asmputils.core.modules.waypoints.LocalWaypointServer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
@@ -165,14 +166,20 @@ public class BrowserCommand implements ICommand {
                                 int shopIndex = (pageIndex - 1) * 45 + slotIndex;
                                 if (shopIndex < lastFiltered.size()) {
                                     ShopDataHolder shop = lastFiltered.get(shopIndex);
-                                    WaypointModule.getWaypointServer().createWaypointIfAllowed(
+                                    LocalWaypointServer server = WaypointModule.getWaypointServer();
+                                    if (server == null) {
+                                        client.player.sendMessage(Text.of("[ASMP Utils] Waypoint feature disabled in config."), false);
+                                    }
+                                    else {
+                                        server.createWaypointIfAllowed(
                                             client,
                                             shop.item + " - " + shop.Owner,
                                             shop.position[0],
                                             shop.position[1],
                                             shop.position[2],
                                             Utils.dimensionFromInt(shop.dimension)
-                                    );
+                                        );
+                                    }
                                 }
                             }
 
