@@ -1,13 +1,13 @@
 {
-    "shopPostUrl": "https://asmp.mia.jetzt/api/shops",
-    "shopGetRoute": "https://asmp.mia.jetzt/api/shops",
-    "waystonePostUrl": "https://asmp.mia.jetzt/api/waystones",
-    "waystoneGetUrl": "https://asmp.mia.jetzt/api/waystones",
-    "deleteRoute": "https://asmp.mia.jetzt/api/delete",
-    "serverIp": "asmp.cc",
+    "shopPostUrl": "https://localhost:987654",
+    "shopGetRoute": "https://localhost:987654",
+    "waystonePostUrl": "https://localhost:987654",
+    "waystoneGetUrl": "https://localhost:987654",
+    "deleteRoute": "https://localhost:987654",
+    "serverIp": "127.0.0.1",
     "shouldUpgradeVersion": true,
-    "version": 4,
+    "version": 5,
 
-    "postUrl": "https://asmp.mia.jetzt/api/shops",
-    "shopRoute": "https://asmp.mia.jetzt/api/shops"
+    "postUrl": "https://localhost:987654",
+    "shopRoute": "https://localhost:987654"
 }
